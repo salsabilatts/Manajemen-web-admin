@@ -5,6 +5,8 @@ import ManajemenUser from "./pages/Manajemen-user";
 import Umkm from "./pages/umkm";
 import Pendidikan from "./pages/Pendidikan";
 import Kesehatan from "./pages/Kesehatan";
+import Hukum from "./pages/Hukum";
+import Sosial from "./pages/Sosial";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/umkm" element={<Umkm />} />
         <Route path="/pendidikan" element={<Pendidikan />} />
         <Route path="/kesehatan" element={<Kesehatan />} />
+        <Route path="/hukum" element={<Hukum />} />
+        <Route path="/sosial" element={<Sosial />} />
       </Routes>
     </BrowserRouter>
   );
