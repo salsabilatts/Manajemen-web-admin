@@ -33,7 +33,7 @@ export default function Dashboard() {
 
     // 2) Aktivitas terbaru
     axios
-      .get(`${BASE_URL}/api/v1/admin/submissions`, {
+      .get(`${BASE_URL}/api/v1/admin/submissions?limit=50`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -42,7 +42,7 @@ export default function Dashboard() {
         const sorted = [...submissions].sort(
           (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)
         );
-        // ambil 20 terakhir (ikut native)
+        // ambil 20 terakhir
         setActivities(sorted.slice(0, 20));
 
         // 3) Transaksi hari ini

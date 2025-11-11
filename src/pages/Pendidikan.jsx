@@ -22,7 +22,7 @@ export default function Pendidikan() {
     }
 
     axios
-      .get(`${BASE_URL}/api/v1/admin/submissions`, {
+      .get(`${BASE_URL}/api/v1/admin/submissions?limit=50`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
