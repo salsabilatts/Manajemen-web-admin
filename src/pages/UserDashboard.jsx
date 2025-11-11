@@ -32,11 +32,90 @@ export default function UserDashboard() {
     setIsMobileMenuOpen(false); // Tutup menu mobile jika terbuka
   };
 
-  const resendVerificationEmail = async () => { /* ... (fungsi resend Anda) ... */ };
-  const formatDateTime = (isoString) => { /* ... (fungsi formatDateTime Anda) ... */ };
-  const StatusBadge = ({ status }) => { /* ... (komponen StatusBadge Anda) ... */ };
-  const TypeIcon = ({ type }) => { /* ... (komponen TypeIcon Anda) ... */ };
+   const resendVerificationEmail = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/v1/user/resend-verification`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert(response.data.message || "Email verifikasi terkirim!");
+    } catch (err) {
+      console.error("Gagal mengirim ulang email:", err);
+      alert(err.response?.data?.error || "Gagal mengirim ulang email.");
+    }
+  };
+  // Helper untuk format waktu
 
+  const formatDateTime = (isoString) => {
+
+    if (!isoString) return '-';
+
+    const date = new Date(isoString);
+
+    return date.toLocaleString('id-ID', {
+
+      year: 'numeric',
+
+      month: 'short',
+
+      day: 'numeric',
+
+      hour: '2-digit',
+
+      minute: '2-digit'
+
+    });
+
+  };
+
+
+
+  // Komponen StatusBadge (bisa dipindahkan ke file terpisah nanti)
+
+  const StatusBadge = ({ status }) => {
+
+    if (!status) return <span className="status-badge user-status">-</span>;
+
+    const lower = status.toLowerCase();
+
+    let cls = "status-badge user-status";
+
+    if (["approved", "disetujui"].includes(lower)) cls += " approved";
+
+    else if (["rejected", "ditolak"].includes(lower)) cls += " rejected";
+
+    else cls += " review"; // default kuning
+
+    return <span className={cls}>{status}</span>;
+
+  };
+
+
+
+  // Komponen Ikon (helper)
+
+  const TypeIcon = ({ type }) => {
+
+      let iconClass = "fas fa-file-alt"; // default
+
+      switch (type) {
+
+          case 'UMKM': iconClass = "fas fa-store"; break;
+
+          case 'Pendidikan': iconClass = "fas fa-school"; break;
+
+          case 'Kesehatan': iconClass = "fas fa-heartbeat"; break;
+
+          case 'Hukum': iconClass = "fas fa-gavel"; break;
+
+          case 'Sosial': iconClass = "fas fa-users"; break;
+
+      }
+
+      return <i className={iconClass}></i>;
+
+  };
   // --- useEffect YANG DIPERBARUI (Logika Public-First) ---
   useEffect(() => {
     const checkUserStatus = async () => {
