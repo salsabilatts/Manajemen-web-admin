@@ -7,6 +7,7 @@ import Pendidikan from "./pages/Pendidikan";
 import Kesehatan from "./pages/Kesehatan";
 import Hukum from "./pages/Hukum";
 import Sosial from "./pages/Sosial";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} /> 
+        <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/users" element={<ManajemenUser />} />
         <Route path="/umkm" element={<Umkm />} />
         <Route path="/pendidikan" element={<Pendidikan />} />
