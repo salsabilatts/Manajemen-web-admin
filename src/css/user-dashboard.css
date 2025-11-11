@@ -1,0 +1,274 @@
+/* ================================== */
+/* === STYLE UNTUK USER DASHBOARD === */
+/* ================================== */
+
+/* Container Utama User Dashboard */
+.user-dashboard-page {
+  margin-left: 0 !important;
+  padding: 0 !important;
+  background-color: #f5f6fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar Baru User */
+/* --- PERBAIKAN NAVBAR --- */
+.user-navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 0.75rem 0; /* DIKURANGI: Padding atas/bawah (sebelumnya 1rem) */
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.user-navbar .user-navbar-container { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.user-navbar .navbar-brand {
+    font-size: 1.4rem; /* DIKURANGI: Ukuran font (sebelumnya 1.6rem) */
+    font-weight: 700;
+    color: #2563eb; 
+    text-decoration: none;
+}
+
+.user-nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.user-nav-link {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem; /* DIKURANGI: Padding tombol (sebelumnya 0.75rem 1.25rem) */
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b; 
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+/* ... (style .user-nav-link:hover dan .active tetap sama) ... */
+.user-nav-link:hover {
+    background-color: #e2e8f0;
+    color: #2c3e50;
+}
+
+.user-nav-link.active {
+    background-color: #2563eb; 
+    color: white;
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+.user-profile-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-profile-menu #user-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.user-logout-btn {
+    background: #ef4444; 
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem; /* DIKURANGI: Padding tombol (sebelumnya 0.75rem 1.25rem) */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.user-logout-btn:hover {
+    background: #dc2626;
+}
+/* --- AKHIR PERBAIKAN NAVBAR --- */
+
+/* Banner Verifikasi Email */
+.user-dashboard-page .verify-banner {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    margin: 1.5rem auto;
+    width: 90%;
+    max-width: 1200px;
+    gap: 1rem;
+    font-size: 0.95rem;
+}
+.user-dashboard-page .verify-banner i {
+    font-size: 1.2rem;
+}
+.user-dashboard-page .verify-banner .link-small {
+    color: #664d03;
+    font-weight: 600;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.875rem;
+    margin-left: auto; 
+}
+
+/* Area Konten User */
+.user-content-area { 
+  flex-grow: 1; 
+  padding: 2rem 0;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-layanan-section h2,
+.user-aktivitas-section h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+}
+.user-layanan-section p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin-bottom: 2rem;
+}
+
+/* Grid Layanan */
+.user-dashboard-page .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem; 
+}
+
+.user-dashboard-page .service-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+}
+
+.user-dashboard-page .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.user-dashboard-page .service-card i {
+    font-size: 2.5rem;
+    color: #2563eb; 
+    margin-bottom: 1rem;
+}
+
+.user-dashboard-page .service-card span {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Bagian Aktivitas */
+.user-aktivitas-section {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.user-aktivitas-section .activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.user-aktivitas-section .activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background-color: #f8fafc;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.user-aktivitas-section .activity-item:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-aktivitas-section .activity-details h4 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.user-aktivitas-section .activity-details p {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.user-aktivitas-section .status-badge.user-status {
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+
+/* General Helper Classes for User Dashboard */
+.user-dashboard-page .no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+.user-dashboard-page .loading-fullscreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+}
+
+/* --- STYLE UNTUK GAMBAR BANNER --- */
+.banner-image-container {
+    width: 100%;
+    /* HAPUS: height: 250px; (biarkan tinggi otomatis) */
+    overflow: hidden; 
+    margin-bottom: 1.5rem; 
+    background-color: #f0f0f0; 
+}
+
+.main-banner-img {
+    width: 100%; 
+    height: auto; /* BIARKAN: Tinggi otomatis agar rasio aspek terjaga */
+    object-fit: contain; /* UBAH: 'contain' agar seluruh gambar muat */
+    display: block; 
+}
+
+/* Responsif untuk gambar banner */
+@media (max-width: 768px) {
+    .banner-image-container {
+        height: 150px; /* Kurangi tinggi banner di layar kecil */
+        margin-bottom: 1rem;
+    }
+}
