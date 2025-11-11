@@ -59,7 +59,7 @@ const formConfig = {
     description: "Isi detail acara keagamaan atau sosial yang akan diadakan.",
     type: "Sosial",
     fields: [
-        { name: "Nama Acara/Kegiatan", label: "Nama Acara/Kegiatan", type: "text" },
+        { name: "Nama Acara", label: "Nama Acara/Kegiatan", type: "text" },
         { name: "Tanggal Pelaksanaan", label: "Tanggal Pelaksanaan", type: "date" },
         { name: "Lokasi Acara", label: "Lokasi Acara", type: "textarea" },
         { name: "Deskripsi Singkat Proposal", label: "Deskripsi Singkat Proposal", type: "textarea" },

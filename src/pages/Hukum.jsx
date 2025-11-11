@@ -9,10 +9,12 @@ export default function BantuanHukum() {
   const [allData, setAllData] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [activeStatus, setActiveStatus] = useState("all");
-  const [detailData, setDetailData] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const token = localStorage.getItem("token");
 
+  // Fetch data
   useEffect(() => {
     if (!token) {
       window.location.href = "/login";
@@ -24,18 +26,17 @@ export default function BantuanHukum() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        const data = res.data || [];
-        const filtered = data.filter((i) => i.Type === "Hukum");
-        setAllData(filtered);
-        setFiltered(filtered);
+        const hukum = (res.data || []).filter((d) => d.Type === "Hukum");
+        setAllData(hukum);
+        setFiltered(hukum);
       })
       .catch((err) => console.error(err));
   }, []);
 
-  // ========================= NORMALIZE STATUS =========================
-  const normalize = (status) => {
-    const s = status?.toLowerCase();
-    if (!s) return "unknown";
+  // Normalize status
+  const normalizeStatus = (status) => {
+    if (!status) return "unknown";
+    const s = status.toLowerCase();
     if (["approved", "disetujui"].includes(s)) return "approved";
     if (["review", "pending"].includes(s)) return "review";
     if (["validasi berkas", "diverifikasi"].includes(s)) return "validasi berkas";
@@ -43,18 +44,60 @@ export default function BantuanHukum() {
     return s;
   };
 
-  // ========================= FILTER =========================
-  const filterStatus = (status) => {
-    setActiveStatus(status);
+  // FILTER (reactive)
+  useEffect(() => {
+    if (activeStatus === "all") setFiltered(allData);
+    else setFiltered(allData.filter((d) => normalizeStatus(d.Status) === activeStatus));
+  }, [activeStatus, allData]);
 
-    if (status === "all") setFiltered(allData);
-    else setFiltered(allData.filter((d) => normalize(d.Status) === status));
+  // ✅ tambahkan fungsi kecil biar onClick gak error
+  const filterStatus = (s) => setActiveStatus(s);
+
+  // Modal
+  const openDetail = (item) => {
+    setDetail(item);
+    setModalOpen(true);
+  };
+  const closeModal = () => setModalOpen(false);
+
+  // Download file (url + filename wajib ada)
+  const downloadFile = async (url, filename) => {
+    try {
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error("Gagal unduh file");
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      if (filename.toLowerCase().endsWith(".pdf")) {
+        window.open(blobUrl, "_blank");
+      } else {
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = filename;
+        a.click();
+      }
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      alert("Gagal mengunduh file");
+    }
   };
 
-  const openDetail = (item) => setDetailData(item);
-  const closeDetail = () => setDetailData(null);
+  // Update status
+  const updateStatus = async (id, status, notes) => {
+    try {
+      await axios.post(
+        `${BASE_URL}/api/v1/admin/submissions/${id}/status`,
+        { status, notes },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert(`Status berhasil diubah menjadi ${status}`);
+      window.location.reload();
+    } catch {
+      alert("Gagal mengubah status");
+    }
+  };
 
-  // EXPORT EXCEL 
+  // Export Excel
   const exportExcel = () => {
     if (!filtered.length) return alert("Tidak ada data!");
 
@@ -72,11 +115,9 @@ export default function BantuanHukum() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(formatted);
     XLSX.utils.book_append_sheet(wb, ws, "Bantuan Hukum");
-
     XLSX.writeFile(wb, "bantuan_hukum.xlsx");
   };
 
-  // LOGOUT 
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
@@ -136,7 +177,6 @@ export default function BantuanHukum() {
 
           <div className="top-bar-actions">
             <button className="notification-btn"><i className="fas fa-bell"></i></button>
-
             <div className="user-profile">
               <div className="user-avatar">AL</div>
               <div className="user-info">
@@ -144,14 +184,13 @@ export default function BantuanHukum() {
                 <i className="fas fa-chevron-down"></i>
               </div>
             </div>
-
             <button className="logout-btn" onClick={handleLogout}>
               <i className="fas fa-sign-out-alt"></i>
             </button>
           </div>
         </header>
 
-        {/* ====================== STATISTIK ====================== */}
+        {/* STATS */}
         <section className="stats-section">
           <div className="stat-card">
             <div className="stat-icon green"><i className="fas fa-balance-scale"></i></div>
@@ -164,7 +203,7 @@ export default function BantuanHukum() {
           <div className="stat-card">
             <div className="stat-icon yellow"><i className="fas fa-clock"></i></div>
             <div className="stat-content">
-              <h3>{allData.filter((d) => normalize(d.Status) === "review").length}</h3>
+              <h3>{allData.filter((d) => normalizeStatus(d.Status) === "review").length}</h3>
               <p>Dalam Review</p>
             </div>
           </div>
@@ -172,7 +211,7 @@ export default function BantuanHukum() {
           <div className="stat-card">
             <div className="stat-icon yellow"><i className="fas fa-clock"></i></div>
             <div className="stat-content">
-              <h3>{allData.filter((d) => normalize(d.Status) === "validasi berkas").length}</h3>
+              <h3>{allData.filter((d) => normalizeStatus(d.Status) === "validasi berkas").length}</h3>
               <p>Validasi Berkas</p>
             </div>
           </div>
@@ -180,7 +219,7 @@ export default function BantuanHukum() {
           <div className="stat-card">
             <div className="stat-icon blue"><i className="fas fa-check-circle"></i></div>
             <div className="stat-content">
-              <h3>{allData.filter((d) => normalize(d.Status) === "approved").length}</h3>
+              <h3>{allData.filter((d) => normalizeStatus(d.Status) === "approved").length}</h3>
               <p>Disetujui</p>
             </div>
           </div>
@@ -188,13 +227,13 @@ export default function BantuanHukum() {
           <div className="stat-card">
             <div className="stat-icon red"><i className="fas fa-times-circle"></i></div>
             <div className="stat-content">
-              <h3>{allData.filter((d) => normalize(d.Status) === "rejected").length}</h3>
+              <h3>{allData.filter((d) => normalizeStatus(d.Status) === "rejected").length}</h3>
               <p>Ditolak</p>
             </div>
           </div>
         </section>
 
-        {/* ====================== TABLE ====================== */}
+        {/* TABLE */}
         <section className="activity-section">
           <div className="section-header">
             <h2>Daftar Pengajuan Bantuan Hukum</h2>
@@ -238,41 +277,47 @@ export default function BantuanHukum() {
                 {filtered.length === 0 ? (
                   <tr><td colSpan="9" className="no-data">Tidak ada data</td></tr>
                 ) : (
-                  filtered.map((item, i) => (
-                    <tr key={item.ID}>
-                      <td>{i + 1}</td>
-                      <td>{new Date(item.CreatedAt).toLocaleDateString("id-ID")}</td>
-                      <td>{item.User?.full_name}</td>
-                      <td>{item.FormData?.["Kebutuhan Bantuan"]}</td>
-                      <td>{item.FormData?.["Pihak Terkait"]}</td>
-                      <td>{item.FormData?.["Uraian Singkat Masalah"]}</td>
+                  filtered.map((item, i) => {
+                    const doc = item.FormData?.document_path;
+                    let docCell = "-";
+                    if (doc) {
+                      const filename = doc.split("/").pop();
+                      const fileUrl = `${BASE_URL}/api/v1/admin/files/${encodeURIComponent(filename)}`;
+                      docCell = (
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            downloadFile(fileUrl, filename);
+                          }}
+                        >
+                          Unduh
+                        </a>
+                      );
+                    }
 
-                      <td>
-                        {item.FormData?.document_path ? (
-                          <button
-                            className="btn-detail"
-                            onClick={() => downloadFile(d.FormData.document_path)}
-                          >
-                            Unduh
+                    return (
+                      <tr key={item.ID}>
+                        <td>{i + 1}</td>
+                        <td>{new Date(item.CreatedAt).toLocaleDateString("id-ID")}</td>
+                        <td>{item.User?.full_name}</td>
+                        <td>{item.FormData?.["Kebutuhan Bantuan"]}</td>
+                        <td>{item.FormData?.["Pihak Terkait"]}</td>
+                        <td>{item.FormData?.["Uraian Singkat Masalah"]}</td>
+                        <td>{docCell}</td>
+                        <td>
+                          <span className={`status-badge ${normalizeStatus(item.Status)}`}>
+                            {item.Status}`
+                          </span>
+                        </td>
+                        <td>
+                          <button className="btn-detail" onClick={() => openDetail(item)}>
+                            Detail
                           </button>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-
-                      <td>
-                        <span className={`status-badge ${normalize(item.Status)}`}>
-                          {item.Status}
-                        </span>
-                      </td>
-
-                      <td>
-                        <button className="btn-detail" onClick={() => openDetail(item)}>
-                          Detail
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -280,42 +325,68 @@ export default function BantuanHukum() {
         </section>
       </main>
 
-      {/* ====================== MODAL ====================== */}
-      {detailData && (
+      {/* MODAL */}
+      {modalOpen && detail && (
         <div className="modal show">
           <div className="modal-content">
             <div className="modal-header">
               <h2>Detail Bantuan Hukum</h2>
-              <button className="modal-close" onClick={closeDetail}>
+              <button className="modal-close" onClick={closeModal}>
                 <i className="fas fa-times"></i>
               </button>
             </div>
 
+            {/* pastikan semua isi tetap DI DALAM modal-body */}
             <div className="modal-body">
-              <p><strong>Tanggal:</strong> {new Date(detailData.CreatedAt).toLocaleString("id-ID")}</p>
-              <p><strong>Nama:</strong> {detailData.User?.full_name}</p>
-              <p><strong>Email:</strong> {detailData.User?.email}</p>
-              <p><strong>Kebutuhan:</strong> {detailData.FormData?.["Kebutuhan Bantuan"]}</p>
-              <p><strong>Pihak Terkait:</strong> {detailData.FormData?.["Pihak Terkait"]}</p>
-              <p><strong>Uraian Masalah:</strong> {detailData.FormData?.["Uraian Singkat Masalah"]}</p>
-            </div>
+              <p><strong>Tanggal:</strong> {new Date(detail.CreatedAt).toLocaleString("id-ID")}</p>
+              <p><strong>Nama:</strong> {detail.User?.full_name}</p>
+              <p><strong>Email:</strong> {detail.User?.email}</p>
+              <p><strong>Kebutuhan:</strong> {detail.FormData?.["Kebutuhan Bantuan"]}</p>
+              <p><strong>Pihak Terkait:</strong> {detail.FormData?.["Pihak Terkait"]}</p>
+              <p><strong>Uraian Masalah:</strong> {detail.FormData?.["Uraian Singkat Masalah"]}</p>
 
-            {detailData.FormData?.document_path && (
+              {detail.FormData?.document_path ? (
                 <p>
                   <strong>Dokumen:</strong>{" "}
                   <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      downloadFile(detailData.FormData.document_path);
+                      const filename = detail.FormData.document_path.split("/").pop();
+                      const fileUrl = `${BASE_URL}/api/v1/admin/files/${encodeURIComponent(filename)}`;
+                      downloadFile(fileUrl, filename);
                     }}
                   >
                     Unduh Dokumen
                   </a>
                 </p>
+              ) : (
+                <p><strong>Dokumen:</strong> -</p>
               )}
+
+              <p><strong>Status Saat Ini:</strong> {detail.Status}</p>
+            </div>
+
             <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeDetail}>Tutup</button>
+              <button className="btn btn-secondary" onClick={closeModal}>Tutup</button>
+              <button
+                className="btn btn-warning"
+                onClick={() => updateStatus(detail.ID, "validasi berkas", "Berkas telah divalidasi")}
+              >
+                Validasi Berkas
+              </button>
+              <button
+                className="btn btn-success"
+                onClick={() => updateStatus(detail.ID, "disetujui", "Pengajuan disetujui")}
+              >
+                Setujui
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => updateStatus(detail.ID, "ditolak", "Pengajuan ditolak")}
+              >
+                Tolak
+              </button>
             </div>
           </div>
         </div>

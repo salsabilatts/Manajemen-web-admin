@@ -68,7 +68,7 @@ export default function Umkm() {
   const downloadFile = async (url, filename) => {
     try {
       const res = await fetch(url, {
-        headers: { Authorization: Bearer `${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) throw new Error("Gagal unduh file");
@@ -139,8 +139,7 @@ export default function Umkm() {
 
   return (
     <div className="container">
-     {/* Sidebar */}
-      <aside className="sidebar">
+<aside className="sidebar">
         <div className="sidebar-header">
           <i className="fas fa-users"></i>
           <div>
@@ -154,7 +153,7 @@ export default function Umkm() {
             <i className="fas fa-home"></i>
             <span>Dashboard</span>
           </a>
-          <a href="/users" className="nav-item">
+          <a href="/users" className="nav-item ">
             <i className="fas fa-users-cog"></i>
             <span>Manajemen User</span>
           </a>
@@ -181,7 +180,6 @@ export default function Umkm() {
         </nav>
       </aside>
       <main className="main-content">
-        {/* TOP BAR */}
         <header className="top-bar">
           <div className="greeting">
             <h1>Pengajuan UMKM</h1>
