@@ -15,6 +15,7 @@ export default function UserDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("layanan");
   const [activities, setActivities] = useState([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const token = localStorage.getItem("token");
 
@@ -134,10 +135,13 @@ export default function UserDashboard() {
   return (
     <div className="user-dashboard-page">
       {/* Navbar (Header) */}
+{/* --- NAVBAR (HEADER) DIPERBARUI --- */}
       <header className="user-navbar">
         <div className="user-navbar-container">
           <div className="navbar-brand">Aspirasi Digital</div>
-          <nav className="user-nav-tabs">
+          
+          {/* Menu Navigasi Desktop (Disembunyikan di mobile) */}
+          <nav className="user-nav-tabs-desktop">
             <button
               className={`user-nav-link ${activeTab === "layanan" ? "active" : ""}`}
               onClick={() => setActiveTab("layanan")}
@@ -151,13 +155,46 @@ export default function UserDashboard() {
               Aktivitas
             </button>
           </nav>
-          <div className="user-profile-menu">
+
+          {/* Menu Profil Desktop (Disembunyikan di mobile) */}
+          <div className="user-profile-menu-desktop">
             <span id="user-name">{user.full_name}</span>
             <button onClick={logout} className="user-logout-btn">
               Logout
             </button>
           </div>
+
+          {/* Tombol Hamburger (Hanya muncul di mobile) */}
+          <button 
+            className="mobile-menu-toggle" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <i className="fas fa-times"></i> : <i className="fas fa-bars"></i>}
+          </button>
         </div>
+        
+        {/* Menu Dropdown Mobile */}
+        {isMobileMenuOpen && (
+          <div className="mobile-nav-menu">
+            <button
+              className={`user-nav-link ${activeTab === "layanan" ? "active" : ""}`}
+              onClick={() => { setActiveTab("layanan"); setIsMobileMenuOpen(false); }}
+            >
+              Layanan
+            </button>
+            <button
+              className={`user-nav-link ${activeTab === "aktivitas" ? "active" : ""}`}
+              onClick={() => { setActiveTab("aktivitas"); setIsMobileMenuOpen(false); }}
+            >
+              Aktivitas
+            </button>
+            <div className="mobile-menu-divider"></div>
+            <span className="mobile-menu-user">{user.full_name}</span>
+            <button onClick={logout} className="mobile-menu-logout">
+              Logout
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Area Banner Gambar */}

@@ -49,7 +49,7 @@
 .form-group input[type="date"]:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: #FF6600;
 }
 
 .form-group textarea {
@@ -67,7 +67,7 @@
     transition: all 0.3s ease;
 }
 .file-input:hover {
-    border-color: #2563eb;
+    border-color: #FF6600;
     background-color: #f8fafc;
 }
 
@@ -81,7 +81,7 @@
     display: inline-block;
     margin-bottom: 1.5rem;
     font-weight: 600;
-    color: #2563eb;
+    color: #FF6600;
     text-decoration: none;
     font-size: 0.9rem;
 }

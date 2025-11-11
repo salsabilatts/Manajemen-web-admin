@@ -36,36 +36,48 @@
 .user-navbar .navbar-brand {
     font-size: 1.4rem; /* DIKURANGI: Ukuran font (sebelumnya 1.6rem) */
     font-weight: 700;
-    color: #2563eb; 
+    color: #FF6600; 
     text-decoration: none;
 }
 
 .user-nav-tabs {
     display: flex;
-    gap: 0.5rem;
+    gap: 1.5rem; /* Beri jarak lebih antar tab */
+    height: 100%; /* Pastikan tingginya sama dengan navbar */
 }
 
 .user-nav-link {
     background: none;
     border: none;
-    padding: 0.5rem 1rem; /* DIKURANGI: Padding tombol (sebelumnya 0.75rem 1.25rem) */
+    padding: 0.75rem 0.25rem; /* Padding atas/bawah, sedikit padding samping */
     font-size: 1rem;
     font-weight: 600;
-    color: #64748b; 
+    color: #64748b; /* Warna teks default (abu-abu) */
     cursor: pointer;
-    border-radius: 8px;
     transition: all 0.2s ease;
+    
+    /* Garis bawah transparan (untuk state non-aktif) */
+    border-bottom: 3px solid transparent; 
 }
-/* ... (style .user-nav-link:hover dan .active tetap sama) ... */
+
+.user-nav-link:focus {
+    outline: none; /* Menghapus outline biru/hitam saat diklik */
+}
+
 .user-nav-link:hover {
-    background-color: #e2e8f0;
-    color: #2c3e50;
+    background-color: transparent; /* Hilangkan background saat di-hover */
+    
+    color: #2c3e50; /* Gelapkan teks saat di-hover */
 }
 
 .user-nav-link.active {
-    background-color: #2563eb; 
-    color: white;
-    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+    background-color: transparent; /* Hilangkan background */
+    color: #FF6600; /* Warna teks aktif (biru) */
+    box-shadow: none; /* Hilangkan shadow tombol */
+    border: none;
+
+    /* Garis bawah aktif */
+    border-bottom: 3px solid #FF6600; 
 }
 
 .user-profile-menu {
@@ -176,7 +188,7 @@
 
 .user-dashboard-page .service-card i {
     font-size: 2.5rem;
-    color: #2563eb; 
+    color: #FF6600; 
     margin-bottom: 1rem;
 }
 
@@ -206,7 +218,7 @@
   align-items: center;
   padding: 1rem 1.25rem;
   background-color: #f8fafc;
-  border-left: 4px solid #2563eb;
+  border-left: 4px solid #FF6600;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
@@ -270,5 +282,177 @@
     .banner-image-container {
         height: 150px; /* Kurangi tinggi banner di layar kecil */
         margin-bottom: 1rem;
+    }
+}
+/* ================================== */
+/* === STYLE NAVBAR USER (RESPONSIVE) === */
+/* ================================== */
+
+.user-navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 0.75rem 0;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.user-navbar-container { 
+    display: flex;
+    justify-content: space-between; /* <-- Kunci: Dorong item ke samping */
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.user-navbar .navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #FF6600; /* Oranye */
+    text-decoration: none;
+}
+
+/* --- Menu Desktop --- */
+.user-nav-tabs-desktop {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.user-nav-link {
+    background: none;
+    border: none;
+    padding: 0.75rem 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent; 
+}
+.user-nav-link:focus {
+    outline: none;
+}
+.user-nav-link:hover {
+    background-color: transparent;
+    color: #2c3e50;
+}
+.user-nav-link.active {
+    background-color: transparent;
+    color: #FF6600; /* Oranye */
+    box-shadow: none; 
+    border-bottom: 3px solid #FF6600; /* Oranye */
+}
+
+.user-profile-menu-desktop {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.user-profile-menu-desktop #user-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+.user-logout-btn {
+    background: #ef4444; 
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.user-logout-btn:hover {
+    background: #dc2626;
+}
+/* --- Akhir Menu Desktop --- */
+
+
+/* --- Tombol Hamburger & Menu Mobile --- */
+.mobile-menu-toggle {
+    display: none; /* Sembunyi di desktop */
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    cursor: pointer;
+}
+.mobile-nav-menu {
+    display: none; /* Sembunyi di desktop */
+}
+/* ---------------------------------- */
+
+
+/* === Media Query untuk Tampilan Mobile (di bawah 768px) === */
+@media (max-width: 768px) {
+    
+    /* Sembunyikan menu navigasi desktop */
+    .user-nav-tabs-desktop {
+        display: none;
+    }
+    
+    /* Sembunyikan menu profil desktop */
+    .user-profile-menu-desktop {
+        display: none;
+    }
+
+    /* Tampilkan tombol hamburger */
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Tampilkan menu dropdown mobile jika 'isMobileMenuOpen' true */
+    .mobile-nav-menu {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background-color: #fff;
+        padding: 1rem;
+        border-top: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        
+        /* Ini akan menempel di bawah navbar */
+        position: absolute;
+        top: 100%; /* Mulai tepat di bawah navbar */
+        left: 0;
+        right: 0;
+    }
+    
+    /* Tombol tab di menu mobile */
+    .mobile-nav-menu .user-nav-link {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: none;
+    }
+    .mobile-nav-menu .user-nav-link.active {
+        border-bottom: none;
+        background-color: #fff3e0; /* Oranye muda */
+        color: #FF6600; /* Oranye */
+    }
+
+    .mobile-menu-divider {
+        height: 1px;
+        background-color: #e2e8f0;
+        margin: 0.75rem 0;
+    }
+
+    .mobile-menu-user {
+        padding: 0.75rem;
+        font-weight: 500;
+        color: #64748b;
+    }
+
+    .mobile-menu-logout {
+        background-color: #ef4444;
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        cursor: pointer;
     }
 }

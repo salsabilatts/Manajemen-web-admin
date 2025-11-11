@@ -18,7 +18,7 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 250px;
-    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #FF6600 0%, #FF6600 100%);
     color: white;
     padding: 24px 0;
     position: fixed;
@@ -106,7 +106,7 @@ body {
 }
 
 .greeting h1 span {
-    color: #2563eb;
+    color: #FF6600;
 }
 
 .breadcrumb {
@@ -148,7 +148,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #2563eb;
+    background: #FF6600;
     color: white;
     display: flex;
     align-items: center;
@@ -216,7 +216,7 @@ body {
 }
 
 .stat-icon.blue {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #FF6600 100%);
 }
 
 .stat-icon.green {
@@ -268,14 +268,14 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #2563eb;
+    color: #FF6600;
     text-decoration: none;
     font-size: 14px;
     transition: color 0.3s ease;
 }
 
 .view-all:hover {
-    color: #1e40af;
+    color: #FF6600;
 }
 
 .table-container {
@@ -376,7 +376,7 @@ body {
     padding: 12px;
     background: #f8fafc;
     border-radius: 8px;
-    border-left: 3px solid #2563eb;
+    border-left: 3px solid #FF6600;
 }
 
 .program-item h4,
@@ -418,7 +418,7 @@ body {
 
 .login-header i {
     font-size: 48px;
-    color: #2563eb;
+    color: #FF6600;
     margin-bottom: 16px;
 }
 
@@ -456,13 +456,13 @@ body {
 
 .form-group input:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: #FF6600;
 }
 
 .login-btn {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #FF6600 0%, #FF6600 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -514,13 +514,13 @@ body {
 }
 
 .filter-btn:hover {
-    border-color: #2563eb;
-    color: #2563eb;
+    border-color: #FF6600;
+    color: #FF6600;
 }
 
 .filter-btn.active {
-    background: #2563eb;
-    border-color: #2563eb;
+    background: #FF6600;
+    border-color: #FF6600;
     color: white;
 }
 
@@ -543,7 +543,7 @@ body {
 }
 
 .action-btn.view:hover {
-    background: #2563eb;
+    background: #FF6600;
 }
 
 /* Modal Styles */
@@ -728,7 +728,7 @@ body {
 }
 
 .search-box input:focus {
-    border-color: #2563eb;
+    border-color: #FF6600;
 }
 
 .search-box i {
