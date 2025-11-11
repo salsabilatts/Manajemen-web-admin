@@ -1,0 +1,100 @@
+/* src/css/submission-form.css */
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.form-container h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.form-container p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+}
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="date"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.file-input {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.file-input:hover {
+    border-color: #2563eb;
+    background-color: #f8fafc;
+}
+
+/* Tombol Submit */
+#submission-form .login-btn { /* Kita pakai ulang style tombol login */
+    margin-top: 1.5rem;
+}
+
+/* Tombol Kembali */
+.link-back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.link-back i {
+    margin-right: 0.5rem;
+}
+.link-back:hover {
+    text-decoration: underline;
+}
+
+/* Error message (reuse from login) */
+.error-message.show {
+    display: block;
+    text-align: left;
+    margin-bottom: 1.5rem;
+}

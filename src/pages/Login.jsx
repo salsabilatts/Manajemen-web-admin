@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // <-- 1. IMPORT LIBRARY BARU
 import "../css/login.css";
+import { Link } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -86,6 +87,11 @@ export default function Login() {
             Login
           </button>
         </form>
+        {/* --- TAMBAHKAN INI --- */}
+        <p style={{textAlign: 'center', marginTop: '1.5rem'}}>
+          Belum punya akun? <Link to="/register" style={{color: '#2563eb', fontWeight: '600'}}>Daftar di sini</Link>
+        </p>
+        {/* --------------------- */}
 
       </div>
     </div>

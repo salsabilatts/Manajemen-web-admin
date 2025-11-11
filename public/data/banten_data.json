@@ -1,0 +1,75 @@
+{
+  "provinsi": {
+    "id": "36",
+    "name": "BANTEN"
+  },
+  "cities": [
+    {
+      "id": "3603",
+      "name": "KAB. TANGERANG",
+      "districts": [
+        { "id": "3603010", "name": "Balaraja" },
+        { "id": "3603020", "name": "Jayanti" },
+        { "id": "3603030", "name": "Tigaraksa" },
+        { "id": "3603040", "name": "Jambe" },
+        { "id": "3603050", "name": "Cisoka" },
+        { "id": "3603060", "name": "Kresek" },
+        { "id": "3603070", "name": "Kronjo" },
+        { "id": "3603080", "name": "Mauk" },
+        { "id": "3603090", "name": "Kemiri" },
+        { "id": "3603100", "name": "Sukadiri" },
+        { "id": "3603110", "name": "Rajeg" },
+        { "id": "3603120", "name": "Pasar Kemis" },
+        { "id": "3603130", "name": "Teluknaga" },
+        { "id": "3603140", "name": "Kosambi" },
+        { "id": "3603150", "name": "Pakuhaji" },
+        { "id": "3603160", "name": "Sepatan" },
+        { "id": "3603170", "name": "Curug" },
+        { "id": "3603180", "name": "Cikupa" },
+        { "id": "3603190", "name": "Panongan" },
+        { "id": "3603200", "name": "Legok" },
+        { "id": "3603210", "name": "Pagedangan" },
+        { "id": "3603220", "name": "Cisauk" },
+        { "id": "3603240", "name": "Sukamulya" },
+        { "id": "3603270", "name": "Kelapa Dua" },
+        { "id": "3603280", "name": "Sindang Jaya" },
+        { "id": "3603290", "name": "Sepatan Timur" },
+        { "id": "3603300", "name": "Solear" },
+        { "id": "3603310", "name": "Gunung Kaler" },
+        { "id": "3603320", "name": "Mekar Baru" }
+      ]
+    },
+    {
+      "id": "3671",
+      "name": "KOTA TANGERANG",
+      "districts": [
+        { "id": "3671010", "name": "Tangerang" },
+        { "id": "3671020", "name": "Jatiuwung" },
+        { "id": "3671030", "name": "Batuceper" },
+        { "id": "3671040", "name": "Benda" },
+        { "id": "3671050", "name": "Cipondoh" },
+        { "id": "3671060", "name": "Ciledug" },
+        { "id": "3671070", "name": "Karawaci" },
+        { "id": "3671080", "name": "Periuk" },
+        { "id": "3671090", "name": "Cibodas" },
+        { "id": "3671100", "name": "Neglasari" },
+        { "id": "3671110", "name": "Pinang" },
+        { "id": "3671120", "name": "Karang Tengah" },
+        { "id": "3671130", "name": "Larangan" }
+      ]
+    },
+    {
+      "id": "3674",
+      "name": "KOTA TANGERANG SELATAN",
+      "districts": [
+        { "id": "3674010", "name": "Serpong" },
+        { "id": "3674020", "name": "Serpong Utara" },
+        { "id": "3674030", "name": "Pondok Aren" },
+        { "id": "3674040", "name": "Ciputat" },
+        { "id": "3674050", "name": "Ciputat Timur" },
+        { "id": "3674060", "name": "Pamulang" },
+        { "id": "3674070", "name": "Setu" }
+      ]
+    }
+  ]
+}

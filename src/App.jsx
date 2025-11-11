@@ -8,6 +8,9 @@ import Kesehatan from "./pages/Kesehatan";
 import Hukum from "./pages/Hukum";
 import Sosial from "./pages/Sosial";
 import UserDashboard from "./pages/UserDashboard";
+import SubmissionForm from "./pages/SubmissionForm";
+import ActivityDetail from "./pages/ActivityDetail";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
         <Route path="/kesehatan" element={<Kesehatan />} />
         <Route path="/hukum" element={<Hukum />} />
         <Route path="/sosial" element={<Sosial />} />
+        <Route path="/submission/:type" element={<SubmissionForm />} />
+        <Route path="/activity/:id" element={<ActivityDetail />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

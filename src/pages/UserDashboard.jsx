@@ -1,19 +1,20 @@
-// src/pages/UserDashboard.jsx
+// src/pages/UserDashboard.jsx (Versi Final Lengkap)
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom"; // Pastikan sudah diimport
-import "../css/user-dashboard.css";
-import { jwtDecode } from "jwt-decode"; // Untuk decode token
-import bannerImage from "../assets/banner_habib.png";
+import "../css/user-dashboard.css"; // CSS untuk halaman ini
+import "../css/activity.css"; // CSS untuk daftar aktivitas (dari langkah sebelumnya)
+import { jwtDecode } from "jwt-decode";
+import bannerImage from "../assets/banner_habib.png"; // Pastikan path ini benar
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"; // Fallback
 
 export default function UserDashboard() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("layanan"); // State untuk tab aktif: 'layanan' atau 'aktivitas'
-  const [activities, setActivities] = useState([]); // State untuk aktivitas
+  const [activeTab, setActiveTab] = useState("layanan");
+  const [activities, setActivities] = useState([]);
   
   const token = localStorage.getItem("token");
 
@@ -36,49 +37,53 @@ export default function UserDashboard() {
     }
   };
 
+  // --- PERBAIKAN useEffect ---
+  // Mengambil data profil dan aktivitas secara bersamaan saat komponen dimuat
   useEffect(() => {
     if (!token) {
       window.location.href = "/";
       return;
     }
 
-    // Fetch user profile
-    axios
-      .get(`${BASE_URL}/api/v1/user/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setUser(res.data);
-        setIsLoading(false);
+    setIsLoading(true);
+
+    // 1. Ambil data profil
+    const fetchProfile = axios.get(`${BASE_URL}/api/v1/user/profile`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // 2. Ambil data aktivitas (menggunakan endpoint user yang benar)
+    const fetchActivities = axios.get(`${BASE_URL}/api/v1/submissions/`, { 
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // Jalankan keduanya secara paralel
+    Promise.all([fetchProfile, fetchActivities])
+      .then(([profileRes, activitiesRes]) => {
+        
+        // Proses data profil
+        setUser(profileRes.data);
+
+        // Proses data aktivitas (backend Go mengembalikan array langsung)
+        const userSubmissions = activitiesRes.data; 
+        const sortedActivities = [...userSubmissions].sort(
+          (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)
+        );
+        setActivities(sortedActivities);
+
+        setIsLoading(false); // Selesai loading
       })
       .catch((err) => {
-        console.error("Gagal memuat profil:", err);
+        console.error("Gagal memuat data:", err);
         if (err.response?.status === 401) {
-          logout();
+          logout(); // Logout paksa jika token tidak valid
         }
         setIsLoading(false);
       });
+  
+  }, [token]); // Dependency array hanya 'token'
+  // --- AKHIR PERBAIKAN useEffect ---
 
-    // Fetch activities (hanya jika tab aktif adalah 'aktivitas' atau saat pertama kali load)
-    if (activeTab === "aktivitas" || !activities.length) {
-        axios
-          .get(`${BASE_URL}/api/v1/user/submissions`, { // Ganti endpoint jika ada endpoint khusus user
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            const userSubmissions = res.data?.data || res.data || [];
-            // Urutkan dari terbaru
-            const sortedActivities = [...userSubmissions].sort(
-              (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)
-            );
-            setActivities(sortedActivities);
-          })
-          .catch((err) => {
-            console.error("Gagal memuat aktivitas:", err);
-            setActivities([]); // Kosongkan jika gagal
-          });
-    }
-  }, [token, activeTab, activities.length]); // Tambahkan activeTab ke dependency array
 
   if (isLoading) {
     return <div className="loading-fullscreen">Memuat data pengguna...</div>;
@@ -101,6 +106,7 @@ export default function UserDashboard() {
     });
   };
 
+  // Komponen StatusBadge (bisa dipindahkan ke file terpisah nanti)
   const StatusBadge = ({ status }) => {
     if (!status) return <span className="status-badge user-status">-</span>;
     const lower = status.toLowerCase();
@@ -111,11 +117,24 @@ export default function UserDashboard() {
     return <span className={cls}>{status}</span>;
   };
 
+  // Komponen Ikon (helper)
+  const TypeIcon = ({ type }) => {
+      let iconClass = "fas fa-file-alt"; // default
+      switch (type) {
+          case 'UMKM': iconClass = "fas fa-store"; break;
+          case 'Pendidikan': iconClass = "fas fa-school"; break;
+          case 'Kesehatan': iconClass = "fas fa-heartbeat"; break;
+          case 'Hukum': iconClass = "fas fa-gavel"; break;
+          case 'Sosial': iconClass = "fas fa-users"; break;
+      }
+      return <i className={iconClass}></i>;
+  };
+
 
   return (
     <div className="user-dashboard-page">
       {/* Navbar (Header) */}
-      <header className="user-navbar"> {/* Ganti class dari 'navbar' menjadi 'user-navbar' */}
+      <header className="user-navbar">
         <div className="user-navbar-container">
           <div className="navbar-brand">Aspirasi Digital</div>
           <nav className="user-nav-tabs">
@@ -142,7 +161,7 @@ export default function UserDashboard() {
       </header>
 
       {/* Area Banner Gambar */}
-      <div className="banner-image-container"> {/* <-- KONTEN BARU UNTUK GAMBAR BANNER */}
+      <div className="banner-image-container">
           <img src={bannerImage} alt="Banner Aspirasi Digital" className="main-banner-img" />
       </div>
 
@@ -161,7 +180,7 @@ export default function UserDashboard() {
       )}
 
       {/* Konten Utama - Disini kita pisahkan berdasarkan tab */}
-      <div className="user-content-area"> {/* Tambahkan class user-content-area */}
+      <div className="user-content-area">
         <main>
           {activeTab === "layanan" && (
             <section className="user-layanan-section">
@@ -200,20 +219,27 @@ export default function UserDashboard() {
                 <p className="no-data">Belum ada riwayat pengajuan.</p>
               ) : (
                 <div className="activity-list">
+                  {/* --- PERUBAHAN: Item sekarang bisa diklik --- */}
                   {activities.map((activity) => (
-                    <div key={activity.ID} className="activity-item">
-                      <div className="activity-details">
-                        <h4>{activity.Type || "Pengajuan Tanpa Tipe"}</h4>
-                        <p>Diajukan: {formatDateTime(activity.CreatedAt)}</p>
-                        {activity.Status === "approved" && activity.ApprovedAt && (
-                          <p>Disetujui: {formatDateTime(activity.ApprovedAt)}</p>
-                        )}
-                        {activity.Status === "rejected" && activity.RejectedAt && (
-                          <p>Ditolak: {formatDateTime(activity.RejectedAt)}</p>
-                        )}
+                    <Link 
+                      key={activity.ID} 
+                      to={`/activity/${activity.ID}`} // Link ke halaman detail
+                      className="activity-item-link" // Class untuk hapus style link
+                    >
+                      <div className="activity-item">
+                        <div className="activity-item-icon">
+                           <TypeIcon type={activity.Type} />
+                        </div>
+                        <div className="activity-details">
+                          <h4>Pengajuan {activity.Type}</h4>
+                          <p>Diajukan: {formatDateTime(activity.CreatedAt)}</p>
+                        </div>
+                        <div className="activity-item-status">
+                           <StatusBadge status={activity.Status} />
+                           <i className="fas fa-chevron-right"></i>
+                        </div>
                       </div>
-                      <StatusBadge status={activity.Status} />
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
