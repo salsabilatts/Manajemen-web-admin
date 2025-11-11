@@ -239,7 +239,7 @@ export default function Register() {
           </div>
 
           <p style={{textAlign: 'center', marginTop: '1.5rem'}}>
-            Sudah punya akun? <Link to="/" style={{color: '#2563eb', fontWeight: '600'}}>Login di sini</Link>
+            Sudah punya akun? <Link to="/login" style={{color: '#2563eb', fontWeight: '600'}}>Login di sini</Link>
           </p>
         </form>
       </div>

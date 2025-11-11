@@ -75,6 +75,15 @@ export default function SubmissionForm() {
   const navigate = useNavigate(); // Untuk pindah halaman
   const token = localStorage.getItem("token");
 
+  // --- TAMBAHKAN PENJAGA PINTU INI ---
+  useEffect(() => {
+    if (!token) {
+      alert("Anda harus login untuk mengakses halaman ini.");
+      navigate('/login');
+    }
+  }, [token, navigate]);
+  // ---------------------------------
+
   // State untuk menyimpan semua nilai form
   const [formData, setFormData] = useState({});
   const [document, setDocument] = useState(null);

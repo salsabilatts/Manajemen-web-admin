@@ -43,6 +43,10 @@ export default function ActivityDetail() {
       window.location.href = "/";
       return;
     }
+    if (!token) {
+      alert("Anda harus login untuk mengakses halaman ini.");
+      navigate('/login');
+    }
     
     if (!id) {
         setError("ID Pengajuan tidak ditemukan.");
