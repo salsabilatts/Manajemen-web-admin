@@ -116,45 +116,64 @@ export default function UserDashboard() {
       return <i className={iconClass}></i>;
 
   };
-  // --- useEffect YANG DIPERBARUI (Logika Public-First) ---
-  useEffect(() => {
-    const checkUserStatus = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setIsLoading(false); // Selesai loading, status adalah 'tamu'
-        setIsLoggedIn(false);
+useEffect(() => {
+  const checkUserStatus = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsLoading(false);
+      setIsLoggedIn(false);
+      return;
+    }
+
+    // Jika ada token, cek role dulu dari token (cepat)
+    try {
+      const decoded = jwtDecode(token);
+      const role = decoded?.role || decoded?.roles || null; // sesuaikan key token jika perlu
+
+      if (role === 'admin') {
+        // jika admin, langsung redirect ke dashboard admin
+        navigate('/dashboard', { replace: true });
         return;
       }
+    } catch (err) {
+      // token tidak bisa di-decode -> hapus
+      console.warn('Token decode error', err);
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setIsLoading(false);
+      return;
+    }
 
-      // Jika ada token, verifikasi
-      setIsLoading(true);
-      try {
-        const fetchProfile = axios.get(`${BASE_URL}/api/v1/user/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const fetchActivities = axios.get(`${BASE_URL}/api/v1/submissions/`, { 
-          headers: { Authorization: `Bearer ${token}` },
-        });
+    // kalau bukan admin, fetch profile & activities untuk user biasa
+    setIsLoading(true);
+    try {
+      const fetchProfile = axios.get(`${BASE_URL}/api/v1/user/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const fetchActivities = axios.get(`${BASE_URL}/api/v1/submissions/`, { 
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        const [profileRes, activitiesRes] = await Promise.all([fetchProfile, fetchActivities]);
+      const [profileRes, activitiesRes] = await Promise.all([fetchProfile, fetchActivities]);
 
-        setUser(profileRes.data);
-        const userSubmissions = activitiesRes.data; 
-        const sortedActivities = [...userSubmissions].sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
-        setActivities(sortedActivities);
-        
-        setIsLoggedIn(true); // Login berhasil
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Gagal memuat data (token mungkin kadaluwarsa):", err);
-        localStorage.removeItem("token"); // Hapus token buruk
-        setIsLoggedIn(false);
-        setIsLoading(false);
-      }
-    };
-    
-    checkUserStatus();
-  }, []); // Hapus [token] agar hanya berjalan sekali saat mount
+      setUser(profileRes.data);
+      const userSubmissions = activitiesRes.data; 
+      const sortedActivities = [...userSubmissions].sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
+      setActivities(sortedActivities);
+      
+      setIsLoggedIn(true);
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Gagal memuat data (token mungkin kadaluwarsa):", err);
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      setIsLoading(false);
+    }
+  };
+  
+  checkUserStatus();
+}, [navigate]);
+ // Hapus [token] agar hanya berjalan sekali saat mount
   // --- AKHIR useEffect ---
 
   // --- FUNGSI NAVIGASI PINTAR ---

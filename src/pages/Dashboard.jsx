@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import "../css/style.css"; // pakai css lama
 // pastikan FA sudah di <head> index.html via CDN
@@ -17,20 +18,24 @@ export default function Dashboard() {
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) {
-      window.location.href = "/"; // balik ke login
+useEffect(() => {
+  if (!token) {
+    window.location.href = "/";
+    return;
+  }
+
+  try {
+    const decoded = jwtDecode(token);
+    if (decoded?.role !== 'admin') {
+      // bukan admin -> arahkan ke user dashboard
+      window.location.href = "/";
       return;
     }
-
-    // 1) Stats
-    axios
-      .get(`${BASE_URL}/api/v1/admin/dashboard-stats`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setStats(res.data))
-      .catch((err) => console.error("Gagal memuat statistik dashboard:", err));
-
+  } catch (e) {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+    return;
+  }
     // 2) Aktivitas terbaru
     axios
       .get(`${BASE_URL}/api/v1/admin/submissions?limit=50`, {
