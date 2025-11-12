@@ -41,7 +41,7 @@ const formConfig = {
         { name: "Nama Pasien", label: "Nama Pasien", type: "text" },
         { name: "NIK", label: "NIK", type: "number" },
         { name: "Keluhan Penyakit", label: "Keluhan Penyakit", type: "textarea" },
-        { name: "Kebutuhan Bantuan (Biaya/Ambulance)", label: "Kebutuhan Bantuan (Biaya/Ambulance)", type: "text" },
+        { name: "Kebutuhan Bantuan", label: "Kebutuhan Bantuan (Biaya/Ambulance)", type: "text" },
     ],
   },
   hukum: {
