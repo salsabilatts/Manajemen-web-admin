@@ -208,7 +208,9 @@ export default function UserDashboard() {
           <div className="user-profile-menu-desktop">
             {isLoggedIn ? (
               <>
-                <span id="user-name">{user?.full_name}</span> {/* Gunakan ? untuk safety */}
+                <Link to="/profile" className="user-name-link">
+                    {user?.full_name}
+                </Link>
                 <button onClick={logout} className="user-logout-btn">
                   Logout
                 </button>
@@ -255,7 +257,9 @@ export default function UserDashboard() {
 
             {isLoggedIn ? (
               <>
-                <span className="mobile-menu-user">{user?.full_name}</span>
+                <Link to="/profile" className="mobile-menu-user" onClick={() => setIsMobileMenuOpen(false)}>
+                    {user?.full_name}
+                </Link>
                 <button onClick={logout} className="mobile-menu-logout">
                   Logout
                 </button>

@@ -456,3 +456,14 @@
         cursor: pointer;
     }
 }
+
+/* Tambahkan di style navbar */
+.user-name-link, .mobile-menu-user {
+    font-weight: 500;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.user-name-link:hover, .mobile-menu-user:hover {
+    color: #FF6600; /* Oranye */
+}

@@ -1,0 +1,131 @@
+/* src/css/profile.css */
+
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.profile-edit-btn {
+    background-color: #f1f5f9;
+    color: #2c3e50;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.profile-edit-btn:hover {
+    background-color: #e2e8f0;
+}
+.profile-edit-btn i {
+    margin-right: 0.5rem;
+}
+
+.profile-section {
+    margin-top: 2rem;
+}
+.profile-section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #FF6600; /* Oranye */
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 0.5rem;
+}
+
+.profile-detail-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+.profile-detail-item:last-child {
+    border-bottom: none;
+}
+
+.profile-label {
+    font-weight: 500;
+    color: #64748b;
+}
+
+.profile-value {
+    color: #2c3e50;
+    font-weight: 500;
+    text-align: right;
+}
+
+/* --- STYLE BARU UNTUK KARTU NFC --- */
+.nfc-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 0.5rem;
+}
+
+/* Style untuk kartu jika belum terhubung */
+.nfc-card.unlinked {
+    background-color: #fef2f2; /* Merah muda */
+    border: 1px solid #fecaca;
+}
+
+/* Style untuk kartu jika sudah terhubung */
+.nfc-card.linked {
+    background-color: #f0fdf4; /* Hijau muda */
+    border: 1px solid #bbf7d0;
+}
+
+.nfc-card-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.nfc-card.unlinked .nfc-card-icon {
+    color: #b91c1c; /* Merah tua */
+}
+
+.nfc-card.linked .nfc-card-icon {
+    color: #16a34a; /* Hijau tua */
+}
+
+.nfc-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nfc-card-content strong {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.nfc-card-content small {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+}

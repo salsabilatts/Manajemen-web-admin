@@ -163,7 +163,7 @@ export default function Register() {
       <div className="login-box" style={{ maxWidth: '500px', marginTop: '3rem', marginBottom: '3rem' }}>
         <div className="login-header">
           <i className="fas fa-user-plus"></i>
-          <h1>{step === 1 ? 'Langkah 1: Data Diri' : 'Langkah 2: Alamat'}</h1>
+          <h1>{step === 1 ? 'Daftar akun' : 'Alamat'}</h1>
           <p>Daftarkan diri Anda untuk memulai</p>
         </div>
 

@@ -78,7 +78,7 @@ export default function Login() {
 
         <div className="login-header">
           <i className="fas fa-users"></i>
-          <h1>Membership System</h1>
+          <h1>Aspirasi Digital</h1>
           <p>Silakan login untuk melanjutkan</p>
         </div>
 
