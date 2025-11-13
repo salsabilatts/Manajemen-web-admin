@@ -11,6 +11,12 @@ export default function Umkm() {
   const [activeStatus, setActiveStatus] = useState("all");
   const [detail, setDetail] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
 
   const token = localStorage.getItem("token");
 
@@ -308,52 +314,26 @@ export default function Umkm() {
               </thead>
 
               <tbody>
-                {filtered.length === 0 ? (
-                  <tr><td colSpan="9" className="no-data">Tidak ada data</td></tr>
-                ) : (
-                  filtered.map((item, index) => {
-                    const doc = item.FormData?.document_path;
-                    let docName = "-";
-
-                    if (doc) {
-                      const filename = doc.split("/").pop();
-                      const fileUrl = `${BASE_URL}/api/v1/admin/files/${encodeURIComponent(filename)}`;
-                      docName = (
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            downloadFile(fileUrl, filename);
-                          }}
-                        >
-                          Unduh
-                        </a>
-                      );
-                    }
-
-                    return (
-                      <tr key={item.ID}>
-                        <td>{index + 1}</td>
-                        <td>{new Date(item.CreatedAt).toLocaleDateString("id-ID")}</td>
-                        <td>{item.User?.full_name}</td>
-                        <td>{item.FormData?.["Nama Usaha"]}</td>
-                        <td>{item.FormData?.["Jenis Usaha"]}</td>
-                        <td>{item.FormData?.["Uraian Kebutuhan Bantuan"]}</td>
-                        <td>{docName}</td>
-                        <td>
-                          <span className={`status-badge ${normalizeStatus(item.Status)}`}>
-                            {item.Status}
-                          </span>
-                        </td>
-                        <td>
-                          <button className="btn-detail" onClick={() => openDetail(item)}>
-                            Detail
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
+               <tbody>
+  {currentItems.length === 0 ? (
+    <tr><td colSpan="9" className="no-data">Tidak ada data</td></tr>
+  ) : (
+    currentItems.map((item, index) => (
+      <tr key={item.ID}>
+        <td>{indexOfFirstItem + index + 1}</td>
+        <td>{new Date(item.CreatedAt).toLocaleDateString("id-ID")}</td>
+        <td>{item.User?.full_name}</td>
+        <td>{item.FormData?.["Nama Usaha"]}</td>
+        <td>{item.FormData?.["Jenis Usaha"]}</td>
+        <td>{item.FormData?.["Uraian Kebutuhan Bantuan"]}</td>
+        <td>{item.Status}</td>
+        <td>
+          <button className="btn-detail" onClick={() => openDetail(item)}>Detail</button>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
               </tbody>
             </table>
           </div>

@@ -120,21 +120,63 @@ body {
     gap: 16px;
 }
 
-.notification-btn {
-    background: #f1f5f9;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+.notification-wrapper {
+  position: relative;
 }
 
-.notification-btn:hover {
-    background: #e2e8f0;
+.notification-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 18px;
+}
+
+.notif-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: red;
+  border-radius: 50%;
+}
+
+.notification-dropdown {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 300px;
+  border-radius: 8px;
+  z-index: 100;
+  padding: 10px;
+}
+
+.notification-dropdown h4 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.notification-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-dropdown li {
+  padding: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.notification-dropdown li:hover {
+  background: #f0f0f0;
 }
 
 .user-profile {
@@ -217,6 +259,10 @@ body {
 
 .stat-icon.blue {
     background: linear-gradient(135deg, #3b82f6 0%, #FF6600 100%);
+}
+
+.stat-icon.purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
 }
 
 .stat-icon.green {

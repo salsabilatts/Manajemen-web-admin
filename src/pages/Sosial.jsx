@@ -98,29 +98,30 @@ export default function Sosial() {
 
   // EXPORT EXCEL
   const exportExcel = () => {
-    if (!filtered.length) return alert("Tidak ada data!");
-
-    const formatted = filtered.map((item, idx) => ({
-      No: idx + 1,
-      Tanggal: new Date(item.CreatedAt).toLocaleString("id-ID"),
-      "Nama Pemohon": item.User?.full_name || "-",
-      "Nama Acara": item.FormData?.["Nama Acara"] || "-",
-      "Lokasi Acara": item.FormData?.["Lokasi Acara"] || "-",
-      "Deskripsi Singkat": item.FormData?.["Deskripsi Singkat Proposal"] || "-",
-      Status: item.Status,
-    }));
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(formatted);
-    XLSX.writeFile(wb, "sosial.xlsx");
+        const formatted = filtered.map((item, index) => ({
+          No: index + 1,
+          "Tanggal": new Date(item.CreatedAt).toLocaleString("id-ID"),
+          Nama: item.User?.full_name,
+          "Nama Acara": item.FormData?.["Nama Acara"],
+          "Lokasi Acara": item.FormData?.["Lokasi Acara"],
+          Deskripsi: item.FormData?.["Deskripsi Singkat Proposal"],
+          Status: item.Status,
+        }));
+    
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(formatted);
+        XLSX.utils.book_append_sheet(wb, ws, "Kesehatan");
+    
+        XLSX.writeFile(wb, "sosial.xlsx");
   };
+
     const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
+
   return (
     <div className="container">
-
       {/* SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-header">
