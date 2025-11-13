@@ -9,9 +9,10 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 export default function Dashboard() {
   const [stats, setStats] = useState({
     total_anggota_aktif: 0,
-    pelaku_umkm: 0,
+    total_pengajuan: 0,
     pengajuan_menunggu: 0,
-    total_saldo_emoney: 0,
+    pengajuan_diterima: 0,
+    pengajuan_ditolak: 0,
   });
   const [activities, setActivities] = useState([]);
   const [todayTransactions, setTodayTransactions] = useState([]);
@@ -51,12 +52,17 @@ useEffect(() => {
       // backend kamu mengembalikan object langsung seperti di Postman,
       // jadi gunakan statsRes.data (atau statsRes.data.data jika backend bungkus)
       const statsData = statsRes.data?.data || statsRes.data || {};
-      setStats({
-        total_anggota_aktif: statsData.total_anggota_aktif ?? 0,
-        pelaku_umkm: statsData.pelaku_umkm ?? 0,
-        pengajuan_menunggu: statsData.pengajuan_menunggu ?? 0,
-        total_saldo_emoney: statsData.total_saldo_emoney ?? 0,
-      });
+        setStats({
+          total_anggota_aktif:
+            statsData.total_anggota_aktif ?? stats.total_anggota_aktif,
+          total_pengajuan: statsData.total_pengajuan ?? stats.total_pengajuan,
+          pengajuan_menunggu:
+            statsData.pengajuan_menunggu ?? stats.pengajuan_menunggu,
+          pengajuan_diterima:
+            statsData.pengajuan_diterima ?? stats.pengajuan_diterima,
+          pengajuan_ditolak:
+            statsData.pengajuan_ditolak ?? stats.pengajuan_ditolak,
+        });
 
       // 2) submissions -> activities & todayTransactions (kamu sudah punya logic)
       const submissions = subsRes.data?.data || subsRes.data || [];
@@ -74,10 +80,11 @@ useEffect(() => {
       console.error("Gagal memuat data dashboard:", err);
       // tetap set default agar UI tidak crash
       setStats({
-        total_anggota_aktif: 0,
-        pelaku_umkm: 0,
-        pengajuan_menunggu: 0,
-        total_saldo_emoney: 0,
+          total_anggota_aktif: 0,
+          total_pengajuan: 0,
+          pengajuan_menunggu: 0,
+          pengajuan_diterima: 0,
+          pengajuan_ditolak: 0,
       });
       setActivities([]);
       setTodayTransactions([]);
@@ -85,8 +92,8 @@ useEffect(() => {
 }, [token]);
 
 
-  const formatIDR = (n) =>
-    `Rp ${Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
+  // const formatIDR = (n) =>
+  //   `Rp ${Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -172,7 +179,7 @@ useEffect(() => {
           </div>
         </header>
 
-        {/* Stats */}
+{/* Stats */}
         <section className="stats-section">
           <div className="stat-card">
             <div className="stat-icon blue">
@@ -185,12 +192,12 @@ useEffect(() => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon green">
-              <i className="fas fa-store"></i>
+            <div className="stat-icon purple">
+              <i className="fas fa-file-alt"></i>
             </div>
             <div className="stat-content">
-              <h3 id="pelakuUmkm">{stats.pelaku_umkm}</h3>
-              <p>Pelaku UMKM</p>
+              <h3 id="totalPengajuan">{stats.total_pengajuan}</h3>
+              <p>Total Pengajuan</p>
             </div>
           </div>
 
@@ -205,12 +212,22 @@ useEffect(() => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon red">
-              <i className="fas fa-wallet"></i>
+            <div className="stat-icon green">
+              <i className="fas fa-check-circle"></i>
             </div>
             <div className="stat-content">
-              <h3 id="totalSaldo">{formatIDR(stats.total_saldo_emoney)}</h3>
-              <p>Total Saldo E-Money</p>
+              <h3 id="pengajuanDiterima">{stats.pengajuan_diterima}</h3>
+              <p>Pengajuan Diterima</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon red">
+              <i className="fas fa-times-circle"></i>
+            </div>
+            <div className="stat-content">
+              <h3 id="pengajuanDitolak">{stats.pengajuan_ditolak}</h3>
+              <p>Pengajuan Ditolak</p>
             </div>
           </div>
         </section>
