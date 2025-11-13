@@ -27,7 +27,6 @@ useEffect(() => {
   try {
     const decoded = jwtDecode(token);
     if (decoded?.role !== 'admin') {
-      // bukan admin -> arahkan ke user dashboard
       window.location.href = "/";
       return;
     }
@@ -36,33 +35,55 @@ useEffect(() => {
     window.location.href = "/";
     return;
   }
-    // 2) Aktivitas terbaru
-    axios
-      .get(`${BASE_URL}/api/v1/admin/submissions?limit=50`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        const submissions = res.data?.data || res.data || [];
-        // urutkan terbaru
-        const sorted = [...submissions].sort(
-          (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)
-        );
-        // ambil 20 terakhir
-        setActivities(sorted.slice(0, 20));
 
-        // 3) Transaksi hari ini
-        const today = new Date().toISOString().split("T")[0];
-        const todayOnly = submissions.filter((s) =>
-          (s.CreatedAt || "").startsWith(today)
-        );
-        setTodayTransactions(todayOnly);
-      })
-      .catch((err) => {
-        console.error("Gagal memuat aktivitas/transaksi:", err);
-        setActivities([]);
-        setTodayTransactions([]);
+  // === new: fetch dashboard stats + submissions in parallel ===
+  const fetchStats = axios.get(`${BASE_URL}/api/v1/admin/dashboard-stats`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const fetchSubmissions = axios.get(`${BASE_URL}/api/v1/admin/submissions?limit=50`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  Promise.all([fetchStats, fetchSubmissions])
+    .then(([statsRes, subsRes]) => {
+      // 1) stats
+      // backend kamu mengembalikan object langsung seperti di Postman,
+      // jadi gunakan statsRes.data (atau statsRes.data.data jika backend bungkus)
+      const statsData = statsRes.data?.data || statsRes.data || {};
+      setStats({
+        total_anggota_aktif: statsData.total_anggota_aktif ?? 0,
+        pelaku_umkm: statsData.pelaku_umkm ?? 0,
+        pengajuan_menunggu: statsData.pengajuan_menunggu ?? 0,
+        total_saldo_emoney: statsData.total_saldo_emoney ?? 0,
       });
-  }, [token]);
+
+      // 2) submissions -> activities & todayTransactions (kamu sudah punya logic)
+      const submissions = subsRes.data?.data || subsRes.data || [];
+      const sorted = [...submissions].sort(
+        (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)
+      );
+      setActivities(sorted.slice(0, 20));
+      const today = new Date().toISOString().split("T")[0];
+      const todayOnly = submissions.filter((s) =>
+        (s.CreatedAt || "").startsWith(today)
+      );
+      setTodayTransactions(todayOnly);
+    })
+    .catch((err) => {
+      console.error("Gagal memuat data dashboard:", err);
+      // tetap set default agar UI tidak crash
+      setStats({
+        total_anggota_aktif: 0,
+        pelaku_umkm: 0,
+        pengajuan_menunggu: 0,
+        total_saldo_emoney: 0,
+      });
+      setActivities([]);
+      setTodayTransactions([]);
+    });
+}, [token]);
+
 
   const formatIDR = (n) =>
     `Rp ${Number(n || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
