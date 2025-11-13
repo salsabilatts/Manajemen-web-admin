@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom"; // Import Link dan useNavigate
-import "../css/login.css"; // Pastikan CSS ini diimpor
+import { Link, useNavigate } from "react-router-dom";
+import "../css/login.css";
 
 // Ambil BASE_URL dari environment variables
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
@@ -11,8 +11,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // State untuk loading
-  const navigate = useNavigate(); // Hook untuk navigasi
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   // --- Penjaga Rute ---
   // Cek apakah user sudah login saat halaman ini dimuat
@@ -23,8 +23,9 @@ export default function Login() {
         const decodedToken = jwtDecode(token);
         const userRole = decodedToken.role;
         
-        // Jika sudah login, tendang ke dasbor yang sesuai
-        if (userRole === 'admin') {
+        // --- PERUBAHAN 1: Cek Role Baru ---
+        // Jika rolenya adalah salah satu dari admin, arahkan ke dasbor admin
+        if (userRole === 'admin_wilayah' || userRole === 'super_admin') {
           navigate("/dashboard"); // Dasbor Admin
         } else {
           navigate("/"); // Dasbor User (halaman utama)
@@ -34,12 +35,12 @@ export default function Login() {
         localStorage.removeItem("token");
       }
     }
-  }, [navigate]); // Tambahkan navigate ke dependency array
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true); // Mulai loading
+    setIsLoading(true);
 
     try {
       const res = await axios.post(`${BASE_URL}/api/v1/auth/login`, {
@@ -50,13 +51,19 @@ export default function Login() {
       const token = res.data.token;
       localStorage.setItem("token", token); // Simpan token
 
-      // Decode token untuk membaca isinya
+      // --- PERUBAHAN 2: Decode dan Simpan Info Tambahan ---
       const decodedToken = jwtDecode(token);
-      const userRole = decodedToken.role; // Ambil role dari payload token
+      const userRole = decodedToken.role;
+      const wilayahTugas = decodedToken.wilayah_tugas || ""; // Ambil wilayah (atau string kosong)
 
-      // Arahkan pengguna berdasarkan role
-      if (userRole === 'admin') {
-        window.location.href = "/dashboard"; // Arahkan admin ke /dashboard
+      // Simpan role & wilayah ke localStorage agar bisa dibaca halaman lain
+      localStorage.setItem("user_role", userRole);
+      localStorage.setItem("wilayah_tugas", wilayahTugas);
+      // ----------------------------------------------------
+
+      // --- PERUBAHAN 3: Arahkan Pengguna Berdasarkan Role Baru ---
+      if (userRole === 'admin_wilayah' || userRole === 'super_admin') {
+        window.location.href = "/dashboard"; // Arahkan semua jenis admin ke /dashboard
       } else if (userRole === 'user') {
         window.location.href = "/"; // Arahkan user biasa ke Halaman Utama (/)
       } else {
@@ -67,9 +74,8 @@ export default function Login() {
       const errorMessage = err.response?.data?.error || "Email atau password salah";
       setError(errorMessage);
       console.error(err);
-      setIsLoading(false); // Hentikan loading jika gagal
+      setIsLoading(false); 
     }
-    // Jangan set isLoading(false) di sini jika sukses, karena halaman akan redirect
   };
 
   return (
@@ -78,7 +84,7 @@ export default function Login() {
 
         <div className="login-header">
           <i className="fas fa-users"></i>
-          <h1>Aspirasi Digital</h1>
+          <h1>Aspirasi Digital</h1> {/* Ganti dari Membership System */}
           <p>Silakan login untuk melanjutkan</p>
         </div>
 
@@ -99,7 +105,6 @@ export default function Login() {
           <div className="form-group">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <label>Password</label>
-              {/* --- TAMBAHKAN LINK LUPA PASSWORD --- */}
               <Link 
                 to="/forgot-password" 
                 style={{ fontSize: '13px', color: '#2563eb', textDecoration: 'none' }}

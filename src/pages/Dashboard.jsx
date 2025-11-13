@@ -17,6 +17,10 @@ export default function Dashboard() {
   const [activities, setActivities] = useState([]);
   const [todayTransactions, setTodayTransactions] = useState([]);
 
+  // --- PERUBAHAN 2: Tambah State untuk Data Admin ---
+  const [adminName, setAdminName] = useState("Admin"); // Default
+  // ----------------------------------------------
+
   const token = localStorage.getItem("token");
 
 useEffect(() => {
@@ -25,12 +29,18 @@ useEffect(() => {
     return;
   }
 
-  try {
-    const decoded = jwtDecode(token);
-    if (decoded?.role !== 'admin') {
-      window.location.href = "/";
-      return;
-    }
+try {
+      const decoded = jwtDecode(token);
+      // --- PERUBAHAN 3: Cek Role Baru ---
+      if (decoded?.role !== 'admin_wilayah' && decoded?.role !== 'super_admin') {
+        window.location.href = "/"; // Tendang jika bukan admin
+        return;
+      }
+      // Ambil nama dari token untuk sapaan
+      if (decoded?.full_name) {
+        setAdminName(decoded.full_name.split(' ')[0]); // Ambil nama depan
+      }
+      // ---------------------------------
   } catch (e) {
     localStorage.removeItem("token");
     window.location.href = "/";
@@ -65,7 +75,9 @@ useEffect(() => {
         });
 
       // 2) submissions -> activities & todayTransactions (kamu sudah punya logic)
-      const submissions = subsRes.data?.data || subsRes.data || [];
+// --- PERUBAHAN 4: Parsing Data Go ---
+        const submissions = subsRes.data || []; // Backend Go kirim array langsung
+        // ------------------------------------
       const sorted = [...submissions].sort(
         (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)
       );
@@ -97,6 +109,8 @@ useEffect(() => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user_role"); // Hapus juga cache role
+    localStorage.removeItem("wilayah_tugas"); // Hapus juga cache wilayah
     window.location.href = "/";
   };
 
@@ -159,7 +173,7 @@ useEffect(() => {
         {/* Top Bar */}
         <header className="top-bar">
           <div className="greeting">
-            <h1>Selamat Datang Admin</h1>
+            <h1>Selamat Datang {adminName}</h1>
             <p className="breadcrumb">Home / Dashboard</p>
           </div>
           <div className="top-bar-actions">

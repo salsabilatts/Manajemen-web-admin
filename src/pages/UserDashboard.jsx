@@ -130,7 +130,7 @@ useEffect(() => {
       const decoded = jwtDecode(token);
       const role = decoded?.role || decoded?.roles || null; // sesuaikan key token jika perlu
 
-      if (role === 'admin') {
+      if (role === 'super_admin') {
         // jika admin, langsung redirect ke dashboard admin
         navigate('/dashboard', { replace: true });
         return;
