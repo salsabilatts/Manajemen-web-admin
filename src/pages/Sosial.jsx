@@ -26,6 +26,7 @@ export default function Sosial() {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const token = localStorage.getItem("token");
+    const currentAdminRole = localStorage.getItem("user_role");
 
   // FETCH DATA
   useEffect(() => {
@@ -388,37 +389,76 @@ export default function Sosial() {
               <p><strong>Status Saat Ini:</strong> {detail.Status}</p>
             </div>
 
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeModal}>Tutup</button>
+<div className="modal-footer">
+  <button className="btn btn-secondary" onClick={() => { closeModal(); setDetail(null); }}>Tutup</button>
 
-              <button
-                className="btn btn-warning"
-                onClick={() => openConfirm(detail.ID, "validasi berkas", "Berkas telah divalidasi",
-                    "Validasi Berkas",
-                    "Anda akan memindahkan pengajuan ke status 'Validasi Berkas'. Lanjutkan?"
-                  )}
-              >
-                Validasi Berkas
-              </button>
+  {/* --- 2. BUNGKUS LOGIKA TOMBOL DENGAN PENGECEKAN INI --- */}
+  {currentAdminRole === 'super_admin' && (() => {
+    // Logika IIFE (Immediately Invoked Function Expression) Anda tetap di sini
+    const st = normalizeStatus(detail.Status);
 
-              <button
-                className="btn btn-success"
-                onClick={() =>
-                  openConfirm(detail.ID, "disetujui", "Pengajuan disetujui", "Setujui Pengajuan", "Setuju akan mengubah status menjadi 'Disetujui'. Anda yakin?")
-                }
-              >
-                Setujui
-              </button>
+    if (st === "review" || st === "unknown") {
+      return (
+        <button
+          className="btn btn-warning"
+          onClick={() =>
+            openConfirm(
+              detail.ID || detail.id,
+              "validasi berkas",
+              "Berkas telah divalidasi",
+              "Validasi Berkas",
+              "Anda akan memindahkan pengajuan ke status 'Validasi Berkas'. Lanjutkan?"
+            )
+          }
+        >
+          Validasi Berkas
+        </button>
+      );
+    }
 
-              <button
-                className="btn btn-danger"
-                onClick={() =>
-                  openConfirm(detail.ID, "ditolak", "Pengajuan ditolak", "Tolak Pengajuan", "Setuju akan mengubah status menjadi 'Ditolak'. Anda yakin?")
-                }
-              >
-                Tolak
-              </button>
-            </div>
+    if (st === "validasi berkas") {
+      return (
+        <>
+          <button
+            className="btn btn-success"
+            onClick={() =>
+              openConfirm(
+                detail.ID || detail.id,
+                "disetujui",
+                "Pengajuan disetujui",
+                "Setujui Pengajuan",
+                "Setuju akan mengubah status menjadi 'Disetujui'. Anda yakin?"
+              )
+            }
+          >
+            Setujui
+          </button>
+
+          <button
+            className="btn btn-danger"
+            onClick={() =>
+              openConfirm(
+                detail.ID || detail.id,
+                "ditolak",
+                "Pengajuan ditolak",
+                "Tolak Pengajuan",
+                "Menolak akan mengubah status menjadi 'Ditolak'. Anda yakin?"
+              )
+            }
+          >
+            Tolak
+          </button>
+        </>
+      );
+    }
+
+    if (st === "approved") return <div className="final-info">Pengajuan <strong>DISETUJUI</strong>.</div>;
+    if (st === "rejected") return <div className="final-info">Pengajuan <strong>DITOLAK</strong>.</div>;
+
+    return null;
+  })()}
+</div>
+
           </div>
         </div>
       )}

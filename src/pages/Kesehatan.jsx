@@ -26,6 +26,7 @@ export default function Kesehatan() {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const token = localStorage.getItem("token");
+  const currentAdminRole = localStorage.getItem("user_role");
 
   // ✅ Fetch Data
   useEffect(() => {
@@ -401,39 +402,85 @@ export default function Kesehatan() {
               <p><strong>Status:</strong> {detailItem.Status}</p>
             </div>
 
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeModal}>Tutup</button>
+{/* modal-footer — show actions depending on current status */}
+<div className="modal-footer">
+  <button className="btn btn-secondary" onClick={() => { closeModal(); setDetail(null); }}>Tutup</button>
 
-              <button
-                className="btn btn-warning"
-                onClick={() =>
-                  openConfirm(detailItem.ID, "validasi berkas", "Berkas telah divalidasi",
-                    "Validasi Berkas",
-                    "Anda akan memindahkan pengajuan ke status 'Validasi Berkas'. Lanjutkan?"
-                  )
-                }
-              >
-                Validasi Berkas
-              </button>
+  {/* --- 2. BUNGKUS LOGIKA TOMBOL DENGAN PENGECEKAN INI --- */}
+  {currentAdminRole === 'super_admin' && (() => {
+    // Logika IIFE (Immediately Invoked Function Expression) Anda tetap di sini
+    const st = normalizeStatus(detail.Status);
 
-              <button
-                className="btn btn-success"
-                onClick={() =>
-                  openConfirm(detailItem.ID, "disetujui", "Pengajuan disetujui", "Setujui Pengajuan", "Setuju akan mengubah status menjadi 'Disetujui'. Anda yakin?")
-                }
-              >
-                Setujui
-              </button>
+    // 1) awal — masih di review: hanya validasi berkas yang muncul
+    if (st === "review" || st === "unknown") {
+      return (
+        <button
+          className="btn btn-warning"
+          onClick={() =>
+            openConfirm(
+              detailItem.ID || detailItem.id,
+              "validasi berkas",
+              "Berkas telah divalidasi",
+              "Validasi Berkas",
+              "Anda akan memindahkan pengajuan ke status 'Validasi Berkas'. Lanjutkan?"
+            )
+          }
+        >
+          Validasi Berkas
+        </button>
+      );
+    }
 
-              <button
-                className="btn btn-danger"
-                onClick={() =>
-                  openConfirm(detailItem.ID, "ditolak", "Pengajuan ditolak", "Tolak Pengajuan", "Setuju akan mengubah status menjadi 'Ditolak'. Anda yakin?")
-                }
-              >
-                Tolak
-              </button>
-            </div>
+    // 2) setelah validasi berkas: munculkan Setujui + Tolak
+    if (st === "validasi berkas") {
+      return (
+        <>
+          <button
+            className="btn btn-success"
+            onClick={() =>
+              openConfirm(
+                detailItem.ID || detailItem.id,
+                "disetujui",
+                "Pengajuan disetujui",
+                "Setujui Pengajuan",
+                "Setuju akan mengubah status menjadi 'Disetujui'. Anda yakin?"
+              )
+            }
+          >
+            Setujui
+          </button>
+
+          <button
+            className="btn btn-danger"
+            onClick={() =>
+              openConfirm(
+                detailItem.ID || detailItem.id,
+                "ditolak",
+                "Pengajuan ditolak",
+                "Tolak Pengajuan",
+                "Menolak akan mengubah status menjadi 'Ditolak'. Anda yakin?"
+              )
+            }
+          >
+            Tolak
+          </button>
+        </>
+      );
+    }
+
+    // 3) sudah final (approved / rejected) — tampilkan info, jangan tampilkan tombol aksi
+    if (st === "approved") {
+      return <div className="final-info">Pengajuan <strong>DISUTUJUI</strong>.</div>;
+    }
+    if (st === "rejected") {
+      return <div className="final-info">Pengajuan <strong>DITOLAK</strong>.</div>;
+    }
+
+    // default safeguard (jika ada status lain) — tampilkan nothing atau tombol validasi
+    return null;
+  })()}
+</div>
+
           </div>
         </div>
       )}      <ConfirmModal

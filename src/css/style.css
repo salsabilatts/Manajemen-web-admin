@@ -894,3 +894,12 @@ body {
   background: white;
 }
 }
+/* tambahkan di style.css */
+.final-info {
+  padding: 10px 12px;
+  background: #f4f7f8;
+  border-radius: 6px;
+  color: #333;
+  margin-left: 8px;
+  display: inline-block;
+}
