@@ -12,6 +12,8 @@ import SubmissionForm from "./pages/SubmissionForm";
 import ActivityDetail from "./pages/ActivityDetail";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="/activity/:id" element={<ActivityDetail />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );
