@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import "../css/style.css"; // pakai css lama
-// pastikan FA sudah di <head> index.html via CDN
+import Pagination from "../components/Pagination.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -19,7 +19,22 @@ export default function Dashboard() {
 
   // --- PERUBAHAN 2: Tambah State untuk Data Admin ---
   const [adminName, setAdminName] = useState("Admin"); // Default
-  // ----------------------------------------------
+  // Pagination for Aktivitas Terbaru
+  const [activityPage, setActivityPage] = useState(1);
+  const itemsPerPageActivity = 10;
+
+  // Pagination for Transaksi Hari Ini
+  const [transPage, setTransPage] = useState(1);
+  const itemsPerPageTrans = 5;
+  // === Aktivitas Terbaru ===
+  const indexOfLastActivity = activityPage * itemsPerPageActivity;
+  const indexOfFirstActivity = indexOfLastActivity - itemsPerPageActivity;
+  const currentActivities = activities.slice(indexOfFirstActivity, indexOfLastActivity);
+
+  // === Transaksi Hari Ini ===
+  const indexOfLastTrans = transPage * itemsPerPageTrans;
+  const indexOfFirstTrans = indexOfLastTrans - itemsPerPageTrans;
+  const currentTrans = todayTransactions.slice(indexOfFirstTrans, indexOfLastTrans);
 
   const token = localStorage.getItem("token");
 
@@ -265,14 +280,14 @@ try {
                 </tr>
               </thead>
               <tbody id="activityTableBody">
-                {activities.length === 0 ? (
+                {currentActivities.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="no-data">
                       Belum ada aktivitas
                     </td>
                   </tr>
                 ) : (
-                  activities.map((sub, idx) => (
+                  currentActivities.map((sub, idx) => (
                     <tr key={idx}>
                       <td>
                         {new Date(sub.CreatedAt).toLocaleString("id-ID")}
@@ -288,6 +303,14 @@ try {
               </tbody>
             </table>
           </div>
+            <div className="pagination-wrapper">
+              <Pagination
+              currentPage={activityPage}
+              totalItems={activities.length}
+              itemsPerPage={itemsPerPageActivity}
+              onPageChange={(page) => setActivityPage(page)}
+              />
+            </div>
         </section>
 
         {/* Transaksi Hari Ini */}
@@ -295,10 +318,10 @@ try {
           <div className="transaksi-hari-ini">
             <h3>Transaksi Hari Ini</h3>
             <div className="transaksi-list" id="transaksiList">
-              {todayTransactions.length === 0 ? (
+              {currentTrans.length === 0 ? (
                 <p className="no-data">Belum ada transaksi</p>
               ) : (
-                todayTransactions.map((sub, i) => (
+                currentTrans.map((sub, i) => (
                   <div className="transaksi-item" key={i}>
                     <p>
                       <strong>
@@ -313,6 +336,14 @@ try {
                   </div>
                 ))
               )}
+            </div>          
+            <div className="pagination-wrapper">
+              <Pagination
+              currentPage={transPage}
+              totalItems={todayTransactions.length}
+              itemsPerPage={itemsPerPageTrans}
+              onPageChange={(page) => setTransPage(page)}
+              />
             </div>
           </div>
         </section>

@@ -4,8 +4,6 @@ import "../css/style.css"; // biar nyatuin style
 export default function Pagination({ currentPage, totalItems, itemsPerPage, onPageChange }) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  if (totalPages <= 1) return null; // gak usah tampil kalau cuma 1 halaman
-
   return (
     <div className="pagination-container">
       <button

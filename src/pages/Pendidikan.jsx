@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
+import Pagination from "../components/Pagination.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -11,11 +12,19 @@ export default function Pendidikan() {
   const [activeStatus, setActiveStatus] = useState("all");
   const [detail, setDetail] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
   const token = localStorage.getItem("token");
 
   // ✅ FETCH DATA
   useEffect(() => {
+    setCurrentPage(1); // Reset to first page on filter change
     if (!token) {
       window.location.href = "/login";
       return;
@@ -312,7 +321,7 @@ export default function Pendidikan() {
                 {filtered.length === 0 ? (
                   <tr><td colSpan="10" className="no-data">Tidak ada data</td></tr>
                 ) : (
-                  filtered.map((item, i) => {
+                  currentItems.map((item, i) => {
                     const doc = item.FormData?.document_path;
                     let docName = "-";
 
@@ -359,6 +368,14 @@ export default function Pendidikan() {
               </tbody>
             </table>
           </div>
+            <div className="pagination-wrapper">
+              <Pagination
+                currentPage={currentPage}
+                totalItems={filtered.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
         </section>
       </main>
 

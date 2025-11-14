@@ -358,6 +358,7 @@ export default function Umkm() {
           <Pagination
             currentPage={currentPage}
             totalItems={filtered.length}
+            itemsPerPage={itemsPerPage}
             onPageChange={(page) => setCurrentPage(page)}
           />
           </div>

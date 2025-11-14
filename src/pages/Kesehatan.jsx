@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
+import Pagination from "../components/Pagination.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -11,7 +12,13 @@ export default function Kesehatan() {
   const [activeStatus, setActiveStatus] = useState("all");
   const [detailItem, setDetailItem] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const token = localStorage.getItem("token");
 
   // ✅ Fetch Data
@@ -46,6 +53,7 @@ export default function Kesehatan() {
 
   // ✅ Filter by status
   useEffect(() => {
+    setCurrentPage(1); // Reset to first page on filter change
     if (activeStatus === "all") {
       setFiltered(allData);
     } else {
@@ -333,6 +341,14 @@ export default function Kesehatan() {
               </tbody>
             </table>
           </div>
+          <div className="pagination-wrapper">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={filtered.length}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={(page) => setCurrentPage(page)}
+                    />
+                    </div>
         </section>
       </main>
 

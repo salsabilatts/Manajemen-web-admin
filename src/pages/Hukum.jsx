@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
+import Pagination from "../components/Pagination.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -11,6 +12,13 @@ export default function BantuanHukum() {
   const [activeStatus, setActiveStatus] = useState("all");
   const [detail, setDetail] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
   const token = localStorage.getItem("token");
 
@@ -46,6 +54,7 @@ export default function BantuanHukum() {
 
   // FILTER (reactive)
   useEffect(() => {
+    setCurrentPage(1); // Reset to first page on filter change
     if (activeStatus === "all") setFiltered(allData);
     else setFiltered(allData.filter((d) => normalizeStatus(d.Status) === activeStatus));
   }, [activeStatus, allData]);
@@ -322,6 +331,14 @@ export default function BantuanHukum() {
               </tbody>
             </table>
           </div>
+                    <div className="pagination-wrapper">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={filtered.length}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={(page) => setCurrentPage(page)}
+                    />
+                    </div>
         </section>
       </main>
 

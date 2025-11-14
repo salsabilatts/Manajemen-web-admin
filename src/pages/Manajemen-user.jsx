@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
+import Pagination from "../components/Pagination.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -32,6 +33,14 @@ export default function ManajemenUser() {
     "KOTA TANGERANG SELATAN",
   ];
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
   // ✅ Fetch Data
 // ✅ Fetch Data & Cek Role Admin
   useEffect(() => {
@@ -60,6 +69,7 @@ export default function ManajemenUser() {
   // ✅ Filter by Role + Search
 // ✅ Filter by Role + Search (improved)
 useEffect(() => {
+  setCurrentPage(1); // Reset to first page on filter change
   let data = Array.isArray(allUsers) ? [...allUsers] : [];
 
   // Normalisasi activeRole untuk perbandingan
@@ -365,7 +375,7 @@ useEffect(() => {
       </td>
     </tr>
   ) : (
-    filteredUsers.map((u, i) => (
+    currentItems.map((u, i) => (
       <tr key={u.ID || u.id || i}>
         <td>{i + 1}</td>
         <td>{u.card_uid || "-"}</td>
@@ -404,6 +414,14 @@ useEffect(() => {
 
             </table>
           </div>
+          <div className="pagination-wrapper">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={filteredUsers.length}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={(page) => setCurrentPage(page)}
+                    />
+                    </div>
         </section>
       </main>
 
