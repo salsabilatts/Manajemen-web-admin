@@ -796,11 +796,31 @@ body {
   }
 }
 
+.pagination-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* bikin ke tengah */
+  margin-top: 20px;
+}
+
 .pagination {
   display: flex;
-  justify-content: center;
   gap: 6px;
-  margin-top: 10px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagination button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 
 .page-btn {

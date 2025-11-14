@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
+import Pagination from "../components/Pagination.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -17,6 +18,7 @@ export default function Umkm() {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
   const token = localStorage.getItem("token");
 
@@ -53,6 +55,7 @@ export default function Umkm() {
 
   // ✅ FILTER STATUS (reactive)
   useEffect(() => {
+    setCurrentPage(1); // reset ke halaman 1 saat filter berubah
     if (activeStatus === "all") {
       setFiltered(allData);
     } else {
@@ -312,30 +315,51 @@ export default function Umkm() {
                   <th>AKSI</th>
                 </tr>
               </thead>
-
-              <tbody>
                <tbody>
-  {currentItems.length === 0 ? (
-    <tr><td colSpan="9" className="no-data">Tidak ada data</td></tr>
-  ) : (
-    currentItems.map((item, index) => (
-      <tr key={item.ID}>
-        <td>{indexOfFirstItem + index + 1}</td>
-        <td>{new Date(item.CreatedAt).toLocaleDateString("id-ID")}</td>
-        <td>{item.User?.full_name}</td>
-        <td>{item.FormData?.["Nama Usaha"]}</td>
-        <td>{item.FormData?.["Jenis Usaha"]}</td>
-        <td>{item.FormData?.["Uraian Kebutuhan Bantuan"]}</td>
-        <td>{item.Status}</td>
-        <td>
-          <button className="btn-detail" onClick={() => openDetail(item)}>Detail</button>
-        </td>
-      </tr>
-    ))
-  )}
-</tbody>
+                {currentItems.length === 0 ? (
+                  <tr><td colSpan="9" className="no-data">Tidak ada data</td></tr>
+                ) : (
+                  currentItems.map((item, index) => (
+                    <tr key={item.ID}>
+                      <td>{indexOfFirstItem + index + 1}</td>
+                      <td>{new Date(item.CreatedAt).toLocaleDateString("id-ID")}</td>
+                      <td>{item.User?.full_name}</td>
+                      <td>{item.FormData?.["Nama Usaha"]}</td>
+                      <td>{item.FormData?.["Jenis Usaha"]}</td>
+                      <td>{item.FormData?.["Uraian Kebutuhan Bantuan"]}</td>
+                      <td>
+                          {item.FormData?.document_path ? (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const filename = item.FormData.document_path.split("/").pop();
+                                const fileUrl = `${BASE_URL}/api/v1/admin/files/${encodeURIComponent(filename)}`;
+                                downloadFile(fileUrl, filename);
+                              }}
+                            >
+                              Unduh
+                            </a>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                      <td>{item.Status}</td>
+                      <td>
+                        <button className="btn-detail" onClick={() => openDetail(item)}>Detail</button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
+          </div>
+          <div className="pagination-wrapper">
+          <Pagination
+            currentPage={currentPage}
+            totalItems={filtered.length}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
           </div>
         </section>
       </main>
