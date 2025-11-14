@@ -3,6 +3,7 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
 import Pagination from "../components/Pagination.jsx";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -19,6 +20,10 @@ export default function Sosial() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmPayload, setConfirmPayload] = useState(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -40,6 +45,26 @@ export default function Sosial() {
       })
       .catch((err) => console.error(err));
   }, []);
+
+   // Confirm Modal Handlers
+  const openConfirm = (id, status, notes, title, message) => {
+      setConfirmPayload({ id, status, notes, title, message });
+      setConfirmOpen(true);
+    };
+
+    const handleConfirm = async () => {
+      if (!confirmPayload) return;
+      setConfirmLoading(true);
+      try {
+        await updateStatus(confirmPayload.id, confirmPayload.status, confirmPayload.notes);
+        // updateStatus dalam file saat ini memanggil window.location.reload() setelah success,
+        // jadi di sini kita cukup menutup dialog; reload di-handle oleh updateStatus.
+      } finally {
+        setConfirmLoading(false);
+        setConfirmOpen(false);
+        setConfirmPayload(null);
+      }
+    };
 
   // NORMALIZE STATUS
   const normalizeStatus = (status) => {
@@ -111,6 +136,7 @@ export default function Sosial() {
           No: index + 1,
           "Tanggal": new Date(item.CreatedAt).toLocaleString("id-ID"),
           Nama: item.User?.full_name,
+          Telepon: item.User?.phone,
           "Nama Acara": item.FormData?.["Nama Acara"],
           "Lokasi Acara": item.FormData?.["Lokasi Acara"],
           Deskripsi: item.FormData?.["Deskripsi Singkat Proposal"],
@@ -367,9 +393,10 @@ export default function Sosial() {
 
               <button
                 className="btn btn-warning"
-                onClick={() =>
-                  updateStatus(detail.ID, "validasi berkas", "Berkas telah divalidasi")
-                }
+                onClick={() => openConfirm(detail.ID, "validasi berkas", "Berkas telah divalidasi",
+                    "Validasi Berkas",
+                    "Anda akan memindahkan pengajuan ke status 'Validasi Berkas'. Lanjutkan?"
+                  )}
               >
                 Validasi Berkas
               </button>
@@ -377,7 +404,7 @@ export default function Sosial() {
               <button
                 className="btn btn-success"
                 onClick={() =>
-                  updateStatus(detail.ID, "disetujui", "Pengajuan disetujui")
+                  openConfirm(detail.ID, "disetujui", "Pengajuan disetujui", "Setujui Pengajuan", "Setuju akan mengubah status menjadi 'Disetujui'. Anda yakin?")
                 }
               >
                 Setujui
@@ -386,7 +413,7 @@ export default function Sosial() {
               <button
                 className="btn btn-danger"
                 onClick={() =>
-                  updateStatus(detail.ID, "ditolak", "Pengajuan ditolak")
+                  openConfirm(detail.ID, "ditolak", "Pengajuan ditolak", "Tolak Pengajuan", "Setuju akan mengubah status menjadi 'Ditolak'. Anda yakin?")
                 }
               >
                 Tolak
@@ -395,7 +422,14 @@ export default function Sosial() {
           </div>
         </div>
       )}
-
+            <ConfirmModal
+                   open={confirmOpen}
+                   title={confirmPayload?.title}
+                   message={confirmPayload?.message}
+                   loading={confirmLoading}
+                   onCancel={() => { setConfirmOpen(false); setConfirmPayload(null); }}
+                   onConfirm={handleConfirm}
+                 />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import "../css/style.css";
 import Pagination from "../components/Pagination.jsx";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -19,6 +20,11 @@ export default function Kesehatan() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmPayload, setConfirmPayload] = useState(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
   const token = localStorage.getItem("token");
 
   // ✅ Fetch Data
@@ -39,6 +45,26 @@ export default function Kesehatan() {
       })
       .catch((err) => console.error(err));
   }, []);
+
+     // Confirm Modal Handlers
+  const openConfirm = (id, status, notes, title, message) => {
+      setConfirmPayload({ id, status, notes, title, message });
+      setConfirmOpen(true);
+    };
+
+    const handleConfirm = async () => {
+      if (!confirmPayload) return;
+      setConfirmLoading(true);
+      try {
+        await updateStatus(confirmPayload.id, confirmPayload.status, confirmPayload.notes);
+        // updateStatus dalam file saat ini memanggil window.location.reload() setelah success,
+        // jadi di sini kita cukup menutup dialog; reload di-handle oleh updateStatus.
+      } finally {
+        setConfirmLoading(false);
+        setConfirmOpen(false);
+        setConfirmPayload(null);
+      }
+    };
 
   // ✅ Normalisasi status (biar konsisten)
   const normalizeStatus = (s) => {
@@ -113,6 +139,7 @@ export default function Kesehatan() {
       No: index + 1,
       "Tanggal": new Date(item.CreatedAt).toLocaleString("id-ID"),
       Nama: item.User?.full_name,
+      Telepon : item.User?.phone,
       "Nama Pemohon": item.FormData?.["Nama Pasien"],
       NIK: item.FormData?.["NIK"],
       "Kebutuhan Bantuan": item.FormData?.["Kebutuhan Bantuan"],
@@ -380,7 +407,10 @@ export default function Kesehatan() {
               <button
                 className="btn btn-warning"
                 onClick={() =>
-                  updateStatus(detailItem.ID, "validasi berkas", "Berkas divalidasi.")
+                  openConfirm(detailItem.ID, "validasi berkas", "Berkas telah divalidasi",
+                    "Validasi Berkas",
+                    "Anda akan memindahkan pengajuan ke status 'Validasi Berkas'. Lanjutkan?"
+                  )
                 }
               >
                 Validasi Berkas
@@ -389,7 +419,7 @@ export default function Kesehatan() {
               <button
                 className="btn btn-success"
                 onClick={() =>
-                  updateStatus(detailItem.ID, "disetujui", "Pengajuan disetujui.")
+                  openConfirm(detailItem.ID, "disetujui", "Pengajuan disetujui", "Setujui Pengajuan", "Setuju akan mengubah status menjadi 'Disetujui'. Anda yakin?")
                 }
               >
                 Setujui
@@ -398,7 +428,7 @@ export default function Kesehatan() {
               <button
                 className="btn btn-danger"
                 onClick={() =>
-                  updateStatus(detailItem.ID, "ditolak", "Pengajuan ditolak.")
+                  openConfirm(detailItem.ID, "ditolak", "Pengajuan ditolak", "Tolak Pengajuan", "Setuju akan mengubah status menjadi 'Ditolak'. Anda yakin?")
                 }
               >
                 Tolak
@@ -406,7 +436,14 @@ export default function Kesehatan() {
             </div>
           </div>
         </div>
-      )}
+      )}      <ConfirmModal
+                   open={confirmOpen}
+                   title={confirmPayload?.title}
+                    message={confirmPayload?.message}
+                    loading={confirmLoading}
+                    onCancel={() => { setConfirmOpen(false); setConfirmPayload(null); }}
+                    onConfirm={handleConfirm}
+                  />
     </div>
   );
 }
