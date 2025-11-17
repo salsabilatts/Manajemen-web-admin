@@ -145,7 +145,7 @@ try {
       {/* Sidebar */}
      <Sidebar />
       {/* Main */}
-      <main className="main-content">
+      <main className="main-content main-with-sidebar">
         {/* Top Bar */}
         <header className="top-bar">
           <div className="greeting">

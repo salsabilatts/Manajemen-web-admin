@@ -1,109 +1,301 @@
-/* Sidebar Container */
+/* sidebar.css - clean, responsive, no horizontal overflow */
+
+/* Reset box model */
+* { box-sizing: border-box; }
+
+/* Sidebar base */
 .sidebar {
-  width: 250px;
-  background: #FF6600;
-  color: white;
-  padding-top: 20px;
   position: fixed;
+  inset: 0 auto 0 0; /* top:0; right:auto; bottom:0; left:0 */
+  width: 260px;
   height: 100vh;
-  transition: all 0.3s ease;
+  background: linear-gradient(180deg,#ff6f00 0%, #ff8a2b 100%);
+  color: #fff;
+  padding: 22px 18px;
+  transition: width .25s ease, transform .25s ease;
   overflow-y: auto;
+  overflow-x: hidden; /* important: prevent horizontal scroll */
   z-index: 1000;
 }
 
-/* Jika ditutup */
-.sidebar.closed {
-  width: 70px;
+/* Collapsed sidebar (icons only) */
+.sidebar.collapsed {
+  width: 72px;
 }
 
-/* Tombol toggle */
-.sidebar-toggle {
-  position: absolute;
-  top: 15px;
-  right: -40px;
-  background: #FF6600;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 18px;
-  transition: 0.3s ease;
+/* Sidebar header */
+.sidebar .sidebar-header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom: 16px;
 }
-
-.sidebar-toggle:hover {
-  background: #e25a00;
+.sidebar .brand {
+  font-weight: 800;
+  font-size: 20px;
+  line-height:1;
 }
-
-/* Header */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 20px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-
-.sidebar-header i {
-  font-size: 32px;
-}
-
-.sidebar-header h2 {
-  font-size: 18px;
-  margin-bottom: 2px;
-}
-
-.sidebar-header p {
+.sidebar .tagline {
   font-size: 12px;
-  opacity: 0.8;
+  opacity: 0.95;
 }
 
-/* Navigation */
+/* Toggle button inside header */
+.sidebar .toggle-btn {
+  margin-left: auto;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: none;
+  height: 36px;
+  width: 36px;
+  border-radius: 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition: background .12s ease, transform .12s ease;
+}
+.sidebar .toggle-btn:hover { background: rgba(255,255,255,0.18); }
+
+/* Nav list */
 .sidebar-nav {
-  margin-top: 20px;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  margin-top: 6px;
+  padding-bottom: 28px;
 }
 
 .nav-item {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding: 12px;
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+  transition: background .12s ease, padding-left .12s ease;
+  white-space: nowrap;
+}
+
+/* Icon circle */
+.nav-item .icon-wrap {
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background: rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+
+/* Label */
+.nav-item .label {
+  font-weight:700;
+  font-size: 15px;
+}
+
+/* Active nav */
+.nav-item.active {
+  background: rgba(255,255,255,0.12);
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.04);
+}
+
+/* Hover */
+.nav-item:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* When sidebar collapsed, hide label smoothly */
+.sidebar.collapsed .label {
+  opacity: 0;
+  transform: translateX(-6px);
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* make icons centered when collapsed */
+.sidebar.collapsed .icon-wrap {
+  margin-left: 6px;
+}
+
+/* ensure no horizontal scrollbar in sidebar */
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 8px; }
+
+/* Main content shift (page-level) */
+/* NOTE: these classes target body; see Sidebar.jsx which adds .sidebar-collapsed to body */
+.main-with-sidebar {
+  margin-left: 260px;
+  transition: margin-left .25s ease;
+}
+body.sidebar-collapsed .main-with-sidebar {
+  margin-left: 72px;
+}
+
+/* Small screens: overlay sidebar */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(0);
+    width: 220px;
+  }
+  .sidebar.collapsed {
+    transform: translateX(-100%); /* hide off-screen */
+  }
+  /* main content occupies full width on small screens */
+  .main-with-sidebar { margin-left: 0; }
+}
+
+/* small polish for final-info or labels inside sidebar */
+.sidebar .small-note {
+  display:block;
+  font-size:12px;
+  opacity:0.95;
+  margin-top:6px;
+}
+
+/* ---------- Fix for collapsed sidebar: icon-only clean look ---------- */
+
+/* make nav-items constrained when collapsed */
+.sidebar.collapsed .sidebar-nav {
+  padding-top: 12px;
+}
+
+/* force each nav-item to be icon-only centered block */
+.sidebar.collapsed .nav-item {
+  width: 56px;               /* fixed icon block width */
+  margin: 8px auto;         /* center horizontally inside sidebar */
+  padding: 8px;             /* smaller padding */
+  justify-content: center;  /* center icon */
+  gap: 0;
+  border-radius: 10px;
+  overflow: visible;
+  background: transparent;  /* remove full-width background */
+}
+
+/* hide the label entirely (remove visual traces) */
+.sidebar.collapsed .label {
+  display: none !important;
+}
+
+/* icon-wrap: keep small rounded background behind icon */
+.sidebar.collapsed .icon-wrap {
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
-  color: white;
-  text-decoration: none;
-  transition: 0.3s ease;
-  border-left: 3px solid transparent;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  transition: background .12s ease, transform .12s ease;
 }
 
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-left-color: white;
+/* hover effect: only apply on icon-wrap (not full row) */
+.sidebar.collapsed .nav-item:hover .icon-wrap {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
-.nav-item i {
-  font-size: 18px;
+/* remove any leftover wide hover backgrounds when collapsed */
+.sidebar.collapsed .nav-item:hover {
+  background: transparent;
 }
 
-/* Saat sidebar closed: hide text */
-.sidebar.closed .nav-item span {
-  transform: translate(-100%);
+/* ensure the active style uses icon-wrap highlight instead of full row */
+.sidebar.collapsed .nav-item.active { background: transparent; }
+.sidebar.collapsed .nav-item.active .icon-wrap {
+  background: rgba(255,255,255,0.18);
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.03);
 }
 
-.sidebar.closed .sidebar-header {
+/* Ensure the sidebar itself doesn't produce horizontal overflow */
+.sidebar { overflow-x: hidden; }
+
+/* make sure main content margin matches collapsed width precisely */
+body.sidebar-collapsed .main-with-sidebar {
+  margin-left: 72px; /* match compact width (sidebar collapsed) */
+}
+
+/* small screens: keep collapsed = hidden, unchanged */
+@media (max-width: 900px) {
+  .sidebar.collapsed .nav-item { width: auto; margin: 8px 12px; }
+  .sidebar.collapsed .label { display: inline-block; opacity: 1; transform: none; }
+}
+
+/* ------------------------
+   Collapsed: show icons + top hamburger
+   ------------------------ */
+
+/* hide brand/title when collapsed so only icons remain */
+.sidebar.collapsed .brand,
+.sidebar.collapsed .small-note {
+  display: none !important;
+}
+
+/* make header minimal when collapsed: keep small vertical spacing */
+.sidebar.collapsed .sidebar-header {
+  padding: 10px 8px;
+  justify-content: center; /* center the toggle */
+}
+
+/* place toggle as a small hamburger button at top center when collapsed */
+.sidebar.collapsed .toggle-btn {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  margin: 6px 0 10px;
+  background: rgba(255,255,255,0.12);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+/* while expanded, keep toggle at right inside header (existing style) */
+.sidebar:not(.collapsed) .toggle-btn {
+  margin-left: auto;
+}
+
+/* adjust sidebar padding so icons are vertically centered nice */
+.sidebar.collapsed {
+  padding-top: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* nav-item when collapsed: ensure icon-only vertical stack looks balanced */
+.sidebar.collapsed .nav-item {
+  width: 56px;
+  margin: 10px auto;
+  padding: 6px;
   justify-content: center;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .sidebar {
-    left: 0;
-    width: 220px;
-  }
-  .sidebar.closed {
-    width: 0;
-    overflow: hidden;
-  }
-
-  .sidebar-toggle {
-    right: -45px;
-  }
+/* ensure icon-wrap larger when collapsed for clearer taps */
+.sidebar.collapsed .icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
 }
+
+/* remove any leftover background rectangle artifacts */
+.sidebar.collapsed .nav-item,
+.sidebar.collapsed .nav-item:hover {
+  background: transparent;
+}
+
+/* show small tooltip title on hover (optional) using title attribute */
+/* (we'll add title attribute in Sidebar.jsx below) */
+
+/* ensure main content margin matches collapsed width precisely */
+body.sidebar-collapsed .main-with-sidebar {
+  margin-left: 72px;
+}
+

@@ -1,63 +1,69 @@
-import { useState } from "react";
+// Sidebar.jsx
+import React, { useState, useEffect } from "react";
 import "../css/sidebar.css";
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    // add/remove class on body so main layout can adapt
+    if (collapsed) {
+      document.body.classList.add("sidebar-collapsed");
+    } else {
+      document.body.classList.remove("sidebar-collapsed");
+    }
+
+    // cleanup (optional)
+    return () => document.body.classList.remove("sidebar-collapsed");
+  }, [collapsed]);
+
+  const toggle = () => setCollapsed((s) => !s);
+
+  // navigation items (customize hrefs if you use react-router Links)
+  const items = [
+    { label: "Dashboard", icon: "fas fa-home", href: "/dashboard" },
+    { label: "Manajemen User", icon: "fas fa-users-cog", href: "/users" },
+    { label: "UMKM", icon: "fas fa-store", href: "/umkm" },
+    { label: "Pendidikan", icon: "fas fa-graduation-cap", href: "/pendidikan" },
+    { label: "Kesehatan", icon: "fas fa-heartbeat", href: "/kesehatan" },
+    { label: "Bantuan Hukum", icon: "fas fa-balance-scale", href: "/hukum" },
+    { label: "Sosial", icon: "fas fa-hands-helping", href: "/sosial" },
+  ];
+
+  // helper to detect active item (basic)
+  const currentPath = window.location.pathname;
 
   return (
-    <aside className={`sidebar ${isOpen ? "open" : "closed"}`}>
-      {/* Tombol toggle sidebar */}
-      <button className="sidebar-toggle" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? "✕" : "☰"}
-      </button>
-
-      {/* Header Logo */}
-      {isOpen && (
-        <div className="sidebar-header">
-          <i className="fas fa-users"></i>
-          <div>
-            <h2>Membership</h2>
-            <p>Management System</p>
-          </div>
+    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`} aria-hidden={false}>
+      <div className="sidebar-header">
+        <div>
+          <div className="brand">Membership</div>
+          <div className="small-note">Management System</div>
         </div>
-      )}
 
-      {/* Navigation */}
-      <nav className="sidebar-nav">
-        <a href="/dashboard" className="nav-item">
-          <i className="fas fa-home"></i>
-          {isOpen && <span>Dashboard</span>}
-        </a>
+        <button
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand" : "Collapse"}
+          className="toggle-btn"
+          onClick={toggle}
+        >
+          <i className={`fas ${collapsed ? "fa-bars" : "fa-times"}`} />
+        </button>
+      </div>
 
-        <a href="/users" className="nav-item">
-          <i className="fas fa-users-cog"></i>
-          {isOpen && <span>Manajemen User</span>}
-        </a>
-
-        <a href="/umkm" className="nav-item">
-          <i className="fas fa-store"></i>
-          {isOpen && <span>UMKM</span>}
-        </a>
-
-        <a href="/pendidikan" className="nav-item">
-          <i className="fas fa-graduation-cap"></i>
-          {isOpen && <span>Pendidikan</span>}
-        </a>
-
-        <a href="/kesehatan" className="nav-item">
-          <i className="fas fa-heartbeat"></i>
-          {isOpen && <span>Kesehatan</span>}
-        </a>
-
-        <a href="/hukum" className="nav-item">
-          <i className="fas fa-balance-scale"></i>
-          {isOpen && <span>Bantuan Hukum</span>}
-        </a>
-
-        <a href="/sosial" className="nav-item">
-          <i className="fas fa-hands-helping"></i>
-          {isOpen && <span>Sosial</span>}
-        </a>
+      <nav className="sidebar-nav" role="navigation" aria-label="Main navigation">
+        {items.map((it) => (
+          <a
+            key={it.href}
+            href={it.href}
+            className={`nav-item ${currentPath === it.href ? "active" : ""}`}
+          >
+            <div className="icon-wrap">
+              <i className={it.icon} />
+            </div>
+            <div className="label">{it.label}</div>
+          </a>
+        ))}
       </nav>
     </aside>
   );

@@ -163,7 +163,7 @@ export default function Sosial() {
       <Sidebar />
 
       {/* CONTENT */}
-      <main className="main-content">
+      <main className="main-content main-with-sidebar">
 
         {/* TOP BAR */}
         <header className="top-bar">

@@ -166,7 +166,7 @@ export default function Kesehatan() {
     <div className="container">
       {/* ✅ SIDEBAR */}
       <Sidebar />
-      <main className="main-content">
+      <main className="main-content main-with-sidebar">
         {/* ✅ Top Bar */}
         <header className="top-bar">
           <div className="greeting">

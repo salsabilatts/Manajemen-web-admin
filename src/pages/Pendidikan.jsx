@@ -178,7 +178,7 @@ export default function Pendidikan() {
       <Sidebar />
 
       {/* MAIN */}
-      <main className="main-content">
+      <main className="main-content main-with-sidebar">
         <header className="top-bar">
           <div className="greeting">
             <h1>Pendidikan</h1>

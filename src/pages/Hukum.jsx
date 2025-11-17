@@ -165,7 +165,7 @@ export default function BantuanHukum() {
       {/* SIDEBAR */}
      <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content main-with-sidebar">
         {/* TOP BAR */}
         <header className="top-bar">
           <div className="greeting">

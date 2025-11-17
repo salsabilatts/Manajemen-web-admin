@@ -217,7 +217,7 @@ useEffect(() => {
       <Sidebar />
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="main-content main-with-sidebar main-with-sidebar">
         {/* TOP BAR */}
         <header className="top-bar">
           <div className="greeting">

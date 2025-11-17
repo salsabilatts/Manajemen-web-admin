@@ -179,7 +179,7 @@ export default function Umkm() {
       <Sidebar />
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="main-content main-with-sidebar">
         <header className="top-bar">
           <div className="greeting">
             <h1>Pengajuan UMKM</h1>
