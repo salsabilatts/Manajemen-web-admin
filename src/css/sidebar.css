@@ -1,0 +1,109 @@
+/* Sidebar Container */
+.sidebar {
+  width: 250px;
+  background: #FF6600;
+  color: white;
+  padding-top: 20px;
+  position: fixed;
+  height: 100vh;
+  transition: all 0.3s ease;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Jika ditutup */
+.sidebar.closed {
+  width: 70px;
+}
+
+/* Tombol toggle */
+.sidebar-toggle {
+  position: absolute;
+  top: 15px;
+  right: -40px;
+  background: #FF6600;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background: #e25a00;
+}
+
+/* Header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar-header i {
+  font-size: 32px;
+}
+
+.sidebar-header h2 {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.sidebar-header p {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Navigation */
+.sidebar-nav {
+  margin-top: 20px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-left-color: white;
+}
+
+.nav-item i {
+  font-size: 18px;
+}
+
+/* Saat sidebar closed: hide text */
+.sidebar.closed .nav-item span {
+  transform: translate(-100%);
+}
+
+.sidebar.closed .sidebar-header {
+  justify-content: center;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    left: 0;
+    width: 220px;
+  }
+  .sidebar.closed {
+    width: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-toggle {
+    right: -45px;
+  }
+}

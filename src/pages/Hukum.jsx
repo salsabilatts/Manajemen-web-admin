@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import "../css/style.css";
 import Pagination from "../components/Pagination.jsx";
 import ConfirmModal from "../components/ConfirmModal.jsx";
+import Sidebar from "../components/Sidebar.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -162,46 +163,7 @@ export default function BantuanHukum() {
   return (
     <div className="container">
       {/* SIDEBAR */}
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <i className="fas fa-users"></i>
-          <div>
-            <h2>Membership</h2>
-            <p>Management System</p>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          <a href="/dashboard" className="nav-item">
-            <i className="fas fa-home"></i>
-            <span>Dashboard</span>
-          </a>
-          <a href="/users" className="nav-item">
-            <i className="fas fa-users-cog"></i>
-            <span>Manajemen User</span>
-          </a>
-          <a href="/umkm" className="nav-item">
-            <i className="fas fa-store"></i>
-            <span>UMKM</span>
-          </a>
-          <a href="/pendidikan" className="nav-item">
-            <i className="fas fa-graduation-cap"></i>
-            <span>Pendidikan</span>
-          </a>
-          <a href="/kesehatan" className="nav-item">
-            <i className="fas fa-heartbeat"></i>
-            <span>Kesehatan</span>
-          </a>
-          <a href="/hukum" className="nav-item active">
-            <i className="fas fa-balance-scale"></i>
-            <span>Bantuan Hukum</span>
-          </a>
-          <a href="/sosial" className="nav-item">
-            <i className="fas fa-hands-helping"></i>
-            <span>Sosial</span>
-          </a>
-        </nav>
-      </aside>
+     <Sidebar />
 
       <main className="main-content">
         {/* TOP BAR */}

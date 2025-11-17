@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import "../css/style.css";
 import Pagination from "../components/Pagination.jsx";
 import ConfirmModal from "../components/ConfirmModal.jsx";
+import Sidebar from "../components/Sidebar.jsx";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -159,25 +160,7 @@ export default function Sosial() {
   return (
     <div className="container">
       {/* SIDEBAR */}
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <i className="fas fa-users"></i>
-          <div>
-            <h2>Membership</h2>
-            <p>Management System</p>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          <a href="/dashboard" className="nav-item"><i className="fas fa-home"></i> Dashboard</a>
-          <a href="/users" className="nav-item"><i className="fas fa-users-cog"></i> Manajemen User</a>
-          <a href="/umkm" className="nav-item"><i className="fas fa-store"></i> UMKM</a>
-          <a href="/pendidikan" className="nav-item"><i className="fas fa-graduation-cap"></i> Pendidikan</a>
-          <a href="/kesehatan" className="nav-item"><i className="fas fa-heartbeat"></i> Kesehatan</a>
-          <a href="/hukum" className="nav-item"><i className="fas fa-balance-scale"></i> Bantuan Hukum</a>
-          <a href="/sosial" className="nav-item active"><i className="fas fa-hands-helping"></i> Sosial</a>
-        </nav>
-      </aside>
+      <Sidebar />
 
       {/* CONTENT */}
       <main className="main-content">
